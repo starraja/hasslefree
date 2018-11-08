@@ -25,8 +25,13 @@ namespace hasslefreeAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Caching the response of the API
             services.AddResponseCaching();
 
+            // In MemoryCache
+            services.AddSingleton<AppMemoryCache>();
+
+            #region Swagger Configuration
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
@@ -49,13 +54,16 @@ namespace hasslefreeAPI
                     }
                 });
             });
+            #endregion
 
+            //Support for the CORS
             services.AddCors();
 
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
 
+            #region Authenication and Authorization
             // configure jwt authentication
             var appSettings = appSettingsSection.Get<AppSettings>();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
@@ -78,6 +86,9 @@ namespace hasslefreeAPI
                     },
                     OnTokenValidated = context =>
                     {
+                        //TO DO: Perform Authorization of User.
+                        //Check if the user have permission to execute the API. 
+                        //Otherwise Reject it as Unauthorized
                         return Task.CompletedTask;
                     }
                 };
@@ -91,7 +102,7 @@ namespace hasslefreeAPI
                     ValidateAudience = false
                 };
             });
-
+            #endregion
 
             services.AddMvc();
 
@@ -100,10 +111,7 @@ namespace hasslefreeAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
-            app.UseSwagger();
-            app.UseStaticFiles();
-
+            #region Caching
             //Caching
             app.UseResponseCaching();
 
@@ -114,21 +122,26 @@ namespace hasslefreeAPI
                     new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
                     {
                         Public = true,
-                        MaxAge = TimeSpan.FromSeconds(10)
+                        MaxAge = TimeSpan.FromSeconds(3600)
                     };
                 context.Response.Headers[Microsoft.Net.Http.Headers.HeaderNames.Vary] =
                     new string[] { "Accept-Encoding" };
 
                 await next();
             });
+            #endregion
 
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+            #region Swagger
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+            app.UseStaticFiles();
             // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hassle Free API V1");
                 c.RoutePrefix = string.Empty;
             });
+            #endregion
 
             // global cors policy
             app.UseCors(x => x
@@ -147,14 +160,6 @@ namespace hasslefreeAPI
             }
 
        
-
-            // global cors policy
-            app.UseCors(x => x
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials());
-
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();

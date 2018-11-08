@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using hasslefreeAPI.Helpers;
+﻿using hasslefreeAPI.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace hasslefreeAPI.Controllers
 {
@@ -19,11 +18,13 @@ namespace hasslefreeAPI.Controllers
     public class UsersController : ControllerBase
     {
         private readonly AppSettings _appSettings;
-
+        // private IMemoryCache cache;
+        private AppMemoryCache cache;
         public UsersController(
-           IOptions<AppSettings> appSettings)
+           IOptions<AppSettings> appSettings, AppMemoryCache _cache)
         {
             _appSettings = appSettings.Value;
+            this.cache = _cache;
         }
 
 
@@ -59,9 +60,10 @@ namespace hasslefreeAPI.Controllers
         public void Delete(int id)
         {
         }
+
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult GenerateToken()
+        public ActionResult<string> GenerateToken()
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
@@ -69,9 +71,9 @@ namespace hasslefreeAPI.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, "Ranga")
+                    new Claim(ClaimTypes.Name, "Ranga")//TO DO: Replace with User ID
                 }),
-                Expires = DateTime.UtcNow.AddMilliseconds(1),
+                Expires = DateTime.UtcNow.AddDays(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
