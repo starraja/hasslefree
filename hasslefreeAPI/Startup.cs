@@ -26,7 +26,7 @@ namespace hasslefreeAPI
         public void ConfigureServices(IServiceCollection services)
         {
             //Caching the response of the API
-            services.AddResponseCaching();
+            //services.AddResponseCaching();
 
             // In MemoryCache
             services.AddSingleton<AppMemoryCache>();
@@ -113,9 +113,9 @@ namespace hasslefreeAPI
         {
             #region Caching
             //Caching
-            app.UseResponseCaching();
+            //app.UseResponseCaching();
 
-            app.Use(async (context, next) =>
+            /*app.Use(async (context, next) =>
             {
                 // For GetTypedHeaders, add: using Microsoft.AspNetCore.Http;
                 context.Response.GetTypedHeaders().CacheControl =
@@ -128,7 +128,7 @@ namespace hasslefreeAPI
                     new string[] { "Accept-Encoding" };
 
                 await next();
-            });
+            });*/
             #endregion
 
             #region Swagger
