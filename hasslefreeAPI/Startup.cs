@@ -2,6 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 using hasslefreeAPI.Helpers;
+using hasslefreeAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -102,6 +103,8 @@ namespace hasslefreeAPI
                     ValidateAudience = false
                 };
             });
+            // configure DI for application services
+            services.AddScoped<IUserService, UserService>();
             #endregion
 
             services.AddMvc();
