@@ -1,4 +1,5 @@
-﻿using hasslefreeAPI.Entities;
+﻿using hasslefreeAPI.Authorization;
+using hasslefreeAPI.Entities;
 using hasslefreeAPI.Helpers;
 using hasslefreeAPI.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -37,7 +38,7 @@ namespace hasslefreeAPI.Controllers
 
             return Ok(user);
         }
-
+        [PermissionAttribute(PermissionType.View,123)]
         [HttpGet]
         public IActionResult GetAll()
         {

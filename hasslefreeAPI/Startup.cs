@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using hasslefreeAPI.Authorization;
+using hasslefreeAPI.Extension;
 using hasslefreeAPI.Helpers;
 using hasslefreeAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -103,8 +106,19 @@ namespace hasslefreeAPI
                     ValidateAudience = false
                 };
             });
+            services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Permission", policyBuilder =>
+                {
+                    policyBuilder.Requirements.Add(new PermissionAuthorizationRequirement());
+                });
+            });
+
+
             // configure DI for application services
-            services.AddScoped<IUserService, UserService>();
+            services.AddScopedImplementations();
             #endregion
 
             services.AddMvc();
