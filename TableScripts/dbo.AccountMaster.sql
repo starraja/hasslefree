@@ -22,7 +22,7 @@ CREATE TABLE [dbo].[AccountMaster] (
     [CreatedDateTime]       SMALLDATETIME  NOT NULL,
     [ModifiedBy]            INT            NOT NULL,
     [ModifiedDateTime]      SMALLDATETIME  NOT NULL,
-    [Source]                VARCHAR (50)   NULL
+    [Source]                INT   NULL
 );
 
 
