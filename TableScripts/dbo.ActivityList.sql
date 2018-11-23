@@ -23,7 +23,7 @@ CREATE TABLE [dbo].[ActivityList] (
     [StatusId]          SMALLINT      NOT NULL,
     [KM]                NVARCHAR (50) NULL,
     [Type]              VARCHAR (50)  NULL,
-    [Source]            VARCHAR (50)  NULL,
+    [Source]            INT   NULL,
     [ReferenceId]       INT           NULL,
     [CreatedBy]         INT           NOT NULL,
     [CreatedDateTime]   SMALLDATETIME NOT NULL,
