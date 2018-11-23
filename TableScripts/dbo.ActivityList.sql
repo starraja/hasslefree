@@ -14,6 +14,9 @@ DROP TABLE [dbo].[ActivityList];
 GO
 CREATE TABLE [dbo].[ActivityList] (
     [ActivityId]        INT           IDENTITY (1, 1) NOT NULL,
+    [ActivityTitle] [nvarchar](max)  NULL,
+    [ActivityLocation] [nvarchar](max)  NULL,
+    [ActivityOwner] [int] NULL,
     [TypeSubtypeId]     SMALLINT      NOT NULL,
     [ActivityStartTime] SMALLDATETIME NOT NULL,
     [ActivityEndTime]   SMALLDATETIME NOT NULL,
