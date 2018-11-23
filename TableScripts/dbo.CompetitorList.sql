@@ -19,6 +19,7 @@ CREATE TABLE [dbo].[CompetitorList] (
     [Remarks]          VARCHAR (MAX) NULL,
     [Source]           VARCHAR (50)  NULL,
     [ReferenceId]      INT           NULL,
+    [IsDeleted] [bit] NOT NULL,
     [CreatedBy]        INT           NOT NULL,
     [CreatedDateTime]  SMALLDATETIME NOT NULL,
     [ModifiedBy]       INT           NOT NULL,
