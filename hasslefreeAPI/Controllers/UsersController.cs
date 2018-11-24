@@ -1,5 +1,5 @@
 ﻿using hasslefreeAPI.Authorization;
-using hasslefreeAPI.Entities;
+using hasslefreeAPI.Models;
 using hasslefreeAPI.Helpers;
 using hasslefreeAPI.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -29,21 +29,28 @@ namespace hasslefreeAPI.Controllers
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody]User userParam)
+        public ActionResult<UserDto> Authenticate([FromBody]CreateUserDto userParam)
         {
-            var user = _userService.Authenticate(userParam.Username, userParam.Password);
+            var user = _userService.Authenticate(userParam.LoginName, userParam.Password);
 
             if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
 
             return Ok(user);
         }
-        [PermissionAttribute(PermissionType.View,123)]
-        [HttpGet]
-        public IActionResult GetAll()
+        [PermissionAttribute(PermissionType.View, 123)]
+        [HttpGet("GetAllUsers")]
+        public ActionResult<UserDto> GetAll()
         {
-            var users = _userService.GetAll();
+            var users = _userService.GetAllUsers();
             return Ok(users);
+        }
+        [AllowAnonymous]
+        [HttpPost("CreateUsers")]
+        public ActionResult<UserDto> CreateUser([FromBody]CreateUserDto createUser)
+        {
+            var user = _userService.CreateUser(createUser);
+            return Ok(user);
         }
     }
 }

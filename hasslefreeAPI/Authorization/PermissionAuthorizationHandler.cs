@@ -22,6 +22,7 @@ namespace hasslefreeAPI.Authorization
 
         private Task<bool> AuthorizeAsync(ClaimsPrincipal user, PermissionType permission)
         {
+
             return Task.FromResult(false);
             //Implement your custom user permission logic here
             //return false;

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using hasslefreeAPI.Authorization;
+using hasslefreeAPI.AutoMapper;
+using hasslefreeAPI.Entities;
 using hasslefreeAPI.Extension;
 using hasslefreeAPI.Helpers;
 using hasslefreeAPI.Services;
@@ -10,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -31,6 +35,9 @@ namespace hasslefreeAPI
         {
             //Caching the response of the API
             //services.AddResponseCaching();
+            var connection = Configuration["AppSettings:ConnectionString"];
+            //Db context
+            services.AddDbContext<HassleFreeContext>(options => options.UseSqlServer(connection));
 
             // In MemoryCache
             services.AddSingleton<AppMemoryCache>();
@@ -116,6 +123,14 @@ namespace hasslefreeAPI
                 });
             });
 
+            // Auto Mapper Configurations
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
 
             // configure DI for application services
             services.AddScopedImplementations();
