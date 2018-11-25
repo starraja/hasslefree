@@ -7,13 +7,11 @@ namespace hasslefreeAPI.Authorization
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
     public class PermissionAttribute : AuthorizeAttribute
     {
-        public PermissionType PermissionType { get; }
-        public int PermissionId { get; }
+        public string UielementCode { get; }
 
-        public PermissionAttribute(PermissionType permissiontype,int permissionid) : base("Permission")
+        public PermissionAttribute(string uielementcode) : base("Permission")
         {
-            PermissionType = permissiontype;
-            PermissionId = permissionid;
+            UielementCode = uielementcode;
         }
     }
 }

@@ -15,34 +15,294 @@ namespace hasslefreeAPI.Entities
         {
         }
 
+        public virtual DbSet<AccountMaster> AccountMaster { get; set; }
+        public virtual DbSet<ActivityList> ActivityList { get; set; }
+        public virtual DbSet<CompetitorList> CompetitorList { get; set; }
+        public virtual DbSet<ContactsList> ContactsList { get; set; }
+        public virtual DbSet<DocumentList> DocumentList { get; set; }
+        public virtual DbSet<LeadTransaction> LeadTransaction { get; set; }
+        public virtual DbSet<MappingInfo> MappingInfo { get; set; }
+        public virtual DbSet<NotesList> NotesList { get; set; }
         public virtual DbSet<PermissionMaster> PermissionMaster { get; set; }
+        public virtual DbSet<ProductList> ProductList { get; set; }
+        public virtual DbSet<ProductMaster> ProductMaster { get; set; }
         public virtual DbSet<RoleMaster> RoleMaster { get; set; }
         public virtual DbSet<RolePermission> RolePermission { get; set; }
         public virtual DbSet<UserMaster> UserMaster { get; set; }
         public virtual DbSet<UserRole> UserRole { get; set; }
 
-        // Unable to generate entity type for table 'dbo.AccountMaster'. Please see the warning messages.
-        // Unable to generate entity type for table 'dbo.ActivityList'. Please see the warning messages.
-        // Unable to generate entity type for table 'dbo.CompetitorList'. Please see the warning messages.
-        // Unable to generate entity type for table 'dbo.ContactsList'. Please see the warning messages.
-        // Unable to generate entity type for table 'dbo.DocumentList'. Please see the warning messages.
-        // Unable to generate entity type for table 'dbo.LeadTransaction'. Please see the warning messages.
-        // Unable to generate entity type for table 'dbo.MappingInfo'. Please see the warning messages.
-        // Unable to generate entity type for table 'dbo.NotesList'. Please see the warning messages.
-        // Unable to generate entity type for table 'dbo.ProductList'. Please see the warning messages.
-        // Unable to generate entity type for table 'dbo.ProductMaster'. Please see the warning messages.
-
-//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//        {
-//            if (!optionsBuilder.IsConfigured)
-//            {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-//                optionsBuilder.UseSqlServer("Server=DESKTOP-BFV957K;Database=hasslefreedev;Trusted_Connection=True;");
-//            }
-//        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<AccountMaster>(entity =>
+            {
+                entity.HasKey(e => e.AccountId);
+
+                entity.Property(e => e.AccountId).ValueGeneratedNever();
+
+                entity.Property(e => e.AccountName).IsRequired();
+
+                entity.Property(e => e.CreatedDateTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.Source)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TurnOver).HasColumnType("money");
+
+                entity.Property(e => e.Type).HasMaxLength(50);
+
+                entity.Property(e => e.WebSite)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.CreatedByNavigation)
+                    .WithMany(p => p.AccountMasterCreatedByNavigation)
+                    .HasForeignKey(d => d.CreatedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_AccountMaster_CreatedBy");
+
+                entity.HasOne(d => d.ModifiedByNavigation)
+                    .WithMany(p => p.AccountMasterModifiedByNavigation)
+                    .HasForeignKey(d => d.ModifiedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_AccountMaster_ModifiedBy");
+            });
+
+            modelBuilder.Entity<ActivityList>(entity =>
+            {
+                entity.HasKey(e => e.ActivityId);
+
+                entity.Property(e => e.ActivityEndTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.ActivityStartTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.CreatedDateTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.Km)
+                    .HasColumnName("KM")
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.Source)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Type)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.CreatedByNavigation)
+                    .WithMany(p => p.ActivityListCreatedByNavigation)
+                    .HasForeignKey(d => d.CreatedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ActivityList_CreatedBy");
+
+                entity.HasOne(d => d.ModifiedByNavigation)
+                    .WithMany(p => p.ActivityListModifiedByNavigation)
+                    .HasForeignKey(d => d.ModifiedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ActivityList_ModifiedBy");
+            });
+
+            modelBuilder.Entity<CompetitorList>(entity =>
+            {
+                entity.HasKey(e => e.CompetitorId);
+
+                entity.Property(e => e.Amount).HasColumnType("money");
+
+                entity.Property(e => e.CreatedDateTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.Name).IsUnicode(false);
+
+                entity.Property(e => e.Remarks).IsUnicode(false);
+
+                entity.Property(e => e.Source)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.CreatedByNavigation)
+                    .WithMany(p => p.CompetitorListCreatedByNavigation)
+                    .HasForeignKey(d => d.CreatedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CompetitorList_CreatedBy");
+
+                entity.HasOne(d => d.ModifiedByNavigation)
+                    .WithMany(p => p.CompetitorListModifiedByNavigation)
+                    .HasForeignKey(d => d.ModifiedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CompetitorList_ModifiedBy");
+            });
+
+            modelBuilder.Entity<ContactsList>(entity =>
+            {
+                entity.HasKey(e => e.ContactId);
+
+                entity.Property(e => e.ContactName).IsUnicode(false);
+
+                entity.Property(e => e.CreatedDateTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.Department).IsUnicode(false);
+
+                entity.Property(e => e.Designation).IsUnicode(false);
+
+                entity.Property(e => e.Email).IsUnicode(false);
+
+                entity.Property(e => e.MobileNumber)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.OfficePhone)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Source)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.CreatedByNavigation)
+                    .WithMany(p => p.ContactsListCreatedByNavigation)
+                    .HasForeignKey(d => d.CreatedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ContactsList_CreatedBy");
+
+                entity.HasOne(d => d.ModifiedByNavigation)
+                    .WithMany(p => p.ContactsListModifiedByNavigation)
+                    .HasForeignKey(d => d.ModifiedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ContactsList_ModifiedBy");
+            });
+
+            modelBuilder.Entity<DocumentList>(entity =>
+            {
+                entity.HasKey(e => e.DocumentId);
+
+                entity.Property(e => e.CreatedDateTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.FileName).IsRequired();
+
+                entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.Source)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Type).HasMaxLength(50);
+
+                entity.HasOne(d => d.CreatedByNavigation)
+                    .WithMany(p => p.DocumentListCreatedByNavigation)
+                    .HasForeignKey(d => d.CreatedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_DocumentList_CreatedBy");
+
+                entity.HasOne(d => d.ModifiedByNavigation)
+                    .WithMany(p => p.DocumentListModifiedByNavigation)
+                    .HasForeignKey(d => d.ModifiedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_DocumentList_ModifiedBy");
+            });
+
+            modelBuilder.Entity<LeadTransaction>(entity =>
+            {
+                entity.HasKey(e => e.LeadId);
+
+                entity.Property(e => e.Accategory).HasColumnName("ACCategory");
+
+                entity.Property(e => e.BuyerRef)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ClosingDate).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.CreatedDateTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.Description)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LeadDate).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
+
+                entity.HasOne(d => d.CreatedByNavigation)
+                    .WithMany(p => p.LeadTransactionCreatedByNavigation)
+                    .HasForeignKey(d => d.CreatedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_LeadTransaction_CreatedBy");
+
+                entity.HasOne(d => d.ModifiedByNavigation)
+                    .WithMany(p => p.LeadTransactionModifiedByNavigation)
+                    .HasForeignKey(d => d.ModifiedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_LeadTransaction_ModifiedBy");
+            });
+
+            modelBuilder.Entity<MappingInfo>(entity =>
+            {
+                entity.HasKey(e => e.MappingId);
+
+                entity.Property(e => e.ChildType)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.CreatedDateTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.ParentType)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.HasOne(d => d.CreatedByNavigation)
+                    .WithMany(p => p.MappingInfoCreatedByNavigation)
+                    .HasForeignKey(d => d.CreatedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MappingInfo_CreatedBy");
+
+                entity.HasOne(d => d.ModifiedByNavigation)
+                    .WithMany(p => p.MappingInfoModifiedByNavigation)
+                    .HasForeignKey(d => d.ModifiedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MappingInfo_ModifiedBy");
+            });
+
+            modelBuilder.Entity<NotesList>(entity =>
+            {
+                entity.HasKey(e => e.NotesId);
+
+                entity.Property(e => e.NotesId).ValueGeneratedNever();
+
+                entity.Property(e => e.CreatedDateTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.NotesDescription).IsRequired();
+
+                entity.Property(e => e.Source)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.CreatedByNavigation)
+                    .WithMany(p => p.NotesListCreatedByNavigation)
+                    .HasForeignKey(d => d.CreatedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_NotesList_CreatedBy");
+
+                entity.HasOne(d => d.ModifiedByNavigation)
+                    .WithMany(p => p.NotesListModifiedByNavigation)
+                    .HasForeignKey(d => d.ModifiedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_NotesList_ModifiedBy");
+            });
+
             modelBuilder.Entity<PermissionMaster>(entity =>
             {
                 entity.HasKey(e => e.PermissionId);
@@ -69,6 +329,72 @@ namespace hasslefreeAPI.Entities
                     .HasForeignKey(d => d.ModifiedBy)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PermissionMaster_ModifiedBy");
+            });
+
+            modelBuilder.Entity<ProductList>(entity =>
+            {
+                entity.Property(e => e.ProductListId).ValueGeneratedNever();
+
+                entity.Property(e => e.Amount).HasColumnType("money");
+
+                entity.Property(e => e.CreatedDateTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.Rate).HasColumnType("money");
+
+                entity.Property(e => e.Source)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TaxAmount).HasColumnType("money");
+
+                entity.Property(e => e.Uom).HasColumnName("UOM");
+
+                entity.HasOne(d => d.CreatedByNavigation)
+                    .WithMany(p => p.ProductListCreatedByNavigation)
+                    .HasForeignKey(d => d.CreatedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductList_CreatedBy");
+
+                entity.HasOne(d => d.ModifiedByNavigation)
+                    .WithMany(p => p.ProductListModifiedByNavigation)
+                    .HasForeignKey(d => d.ModifiedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductList_ModifiedBy");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.ProductList)
+                    .HasForeignKey(d => d.ProductId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductList_ProductId");
+            });
+
+            modelBuilder.Entity<ProductMaster>(entity =>
+            {
+                entity.HasKey(e => e.ProductId);
+
+                entity.Property(e => e.CreatedDateTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.Name).IsUnicode(false);
+
+                entity.Property(e => e.Rate).HasColumnType("money");
+
+                entity.Property(e => e.Uom).HasColumnName("UOM");
+
+                entity.HasOne(d => d.CreatedByNavigation)
+                    .WithMany(p => p.ProductMasterCreatedByNavigation)
+                    .HasForeignKey(d => d.CreatedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductMaster_CreatedBy");
+
+                entity.HasOne(d => d.ModifiedByNavigation)
+                    .WithMany(p => p.ProductMasterModifiedByNavigation)
+                    .HasForeignKey(d => d.ModifiedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductMaster_ModifiedBy");
             });
 
             modelBuilder.Entity<RoleMaster>(entity =>

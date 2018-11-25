@@ -11,7 +11,7 @@ namespace hasslefreeAPI.Authorization
         {
             foreach (var permissionAttribute in attributes)
             {
-                if (!await AuthorizeAsync(context.User, permissionAttribute.PermissionType))
+                if (!await AuthorizeAsync(context.User, permissionAttribute.UielementCode))
                 {
                     return;
                 }
@@ -20,7 +20,7 @@ namespace hasslefreeAPI.Authorization
             context.Succeed(requirement);
         }
 
-        private Task<bool> AuthorizeAsync(ClaimsPrincipal user, PermissionType permission)
+        private Task<bool> AuthorizeAsync(ClaimsPrincipal user, string UielementCode)
         {
 
             return Task.FromResult(false);

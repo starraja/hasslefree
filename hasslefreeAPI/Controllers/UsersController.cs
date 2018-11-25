@@ -38,13 +38,15 @@ namespace hasslefreeAPI.Controllers
 
             return Ok(user);
         }
-        [PermissionAttribute(PermissionType.View, 123)]
+
+        [PermissionAttribute("")]
         [HttpGet("GetAllUsers")]
         public ActionResult<UserDto> GetAll()
         {
             var users = _userService.GetAllUsers();
             return Ok(users);
         }
+
         [AllowAnonymous]
         [HttpPost("CreateUsers")]
         public ActionResult<UserDto> CreateUser([FromBody]CreateUserDto createUser)
