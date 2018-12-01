@@ -97,7 +97,7 @@ namespace hasslefreeAPI.Services
                 new Claim(ClaimTypes.NameIdentifier, user.Id)
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtKey"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AppSettings:Secret"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JwtExpireDays"]));
 
@@ -108,7 +108,7 @@ namespace hasslefreeAPI.Services
                 expires: expires,
                 signingCredentials: creds
             );
-            UserDto userdto = _mapper.Map<UserDto>(user);
+            UserDto userdto =new UserDto {FirstName=user.UserName};
             userdto.Token= new JwtSecurityTokenHandler().WriteToken(token);
             return userdto;
         }

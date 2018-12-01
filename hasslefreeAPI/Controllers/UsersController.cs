@@ -79,7 +79,7 @@ namespace hasslefreeAPI.Controllers
             return new UserDto { IdentityError = result.Errors };
         }
         [HttpPost("VerifyEmail")]
-        public async Task<object> VerifyEmail(string username, string emailtoken)
+        public async Task<object> VerifyEmail([FromBody]string username, [FromBody]string emailtoken)
         {
             IdentityUser user = await _userManager.FindByNameAsync(username);
 

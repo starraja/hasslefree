@@ -8,6 +8,8 @@
     <Compile Remove="Helpers\DataContext.cs" />
     <Compile Remove="Migrations\20181127174844_hasslefree.cs" />
     <Compile Remove="Migrations\20181127174844_hasslefree.Designer.cs" />
+    <Compile Remove="Migrations\20181201114139_employee.cs" />
+    <Compile Remove="Migrations\20181201114139_employee.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
