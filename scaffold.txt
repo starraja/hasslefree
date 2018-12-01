@@ -1,0 +1,22 @@
+lead to opp - 1 to 1 mapping not needed 
+
+
+
+
+lead to account - many to many 
+
+
+
+opp to account - 1 to 1 mapping not needed 
+
+
+
+lead 1     opt
+                   account  
+lead 2     opt 
+
+
+
+ sales stage 
+
+ Scaffold-DbContext "Server=143.95.251.18;Database=hasslefreedev;User Id=hasslefreedevuser;Password=hasslefreedevuser;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Entities -context HassleFreeContext

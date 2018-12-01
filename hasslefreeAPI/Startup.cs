@@ -2,22 +2,28 @@
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using FluentValidation.AspNetCore;
 using hasslefreeAPI.Authorization;
 using hasslefreeAPI.AutoMapper;
 using hasslefreeAPI.Entities;
 using hasslefreeAPI.Extension;
 using hasslefreeAPI.Helpers;
-using hasslefreeAPI.Services;
+using hasslefreeAPI.Interface;
+using hasslefreeAPI.Models;
+//using hasslefreeAPI.Services;
+using hasslefreeAPI.Validators;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
+
 
 namespace hasslefreeAPI
 {
@@ -38,6 +44,13 @@ namespace hasslefreeAPI
             var connection = Configuration["AppSettings:ConnectionString"];
             //Db context
             services.AddDbContext<HassleFreeContext>(options => options.UseSqlServer(connection));
+
+            services.AddIdentity<IdentityUser, IdentityRole>(config =>
+            {
+                config.SignIn.RequireConfirmedEmail = true;
+            })
+                  .AddEntityFrameworkStores<HassleFreeContext>()
+                  .AddDefaultTokenProviders();
 
             // In MemoryCache
             services.AddSingleton<AppMemoryCache>();
@@ -136,12 +149,14 @@ namespace hasslefreeAPI
             services.AddScopedImplementations();
             #endregion
 
-            services.AddMvc();
+            services.AddMvc()
+  .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<UserValidator>());
+            services.AddSendGridEmailSender();
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,IEmailSender _emailSender)
         {
             #region Caching
             //Caching
@@ -195,6 +210,16 @@ namespace hasslefreeAPI
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();
+            // _emailSender.SendEmailAsync(new SendEmailDetails
+            //{
+            //     Subject="asdasd",
+            //     Content = "asdasd",
+            //    FromEmail = "hasslefreecrm",
+            //    FromName = "System",
+            //    ToEmail = "sriram5052@gmail.com",
+            //    ToName = "Sriram"
+
+            //});
         }
     }
 }

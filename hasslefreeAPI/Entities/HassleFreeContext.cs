@@ -1,151 +1,203 @@
 ﻿using System;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace hasslefreeAPI.Entities
 {
-    public partial class HassleFreeContext : DbContext
+    public partial class HassleFreeContext : IdentityDbContext
     {
-        public HassleFreeContext()
-        {
-        }
 
         public HassleFreeContext(DbContextOptions<HassleFreeContext> options)
             : base(options)
         {
         }
 
-        public virtual DbSet<AccountMaster> AccountMaster { get; set; }
-        public virtual DbSet<ActivityList> ActivityList { get; set; }
-        public virtual DbSet<CompetitorList> CompetitorList { get; set; }
-        public virtual DbSet<ContactsList> ContactsList { get; set; }
-        public virtual DbSet<DocumentList> DocumentList { get; set; }
-        public virtual DbSet<LeadTransaction> LeadTransaction { get; set; }
-        public virtual DbSet<MappingInfo> MappingInfo { get; set; }
-        public virtual DbSet<NotesList> NotesList { get; set; }
-        public virtual DbSet<PermissionMaster> PermissionMaster { get; set; }
+        public virtual DbSet<Accounts> Accounts { get; set; }
+        public virtual DbSet<Activities> Activities { get; set; }
+        public virtual DbSet<Address> Address { get; set; }
+        public virtual DbSet<Competitors> Competitors { get; set; }
+        public virtual DbSet<Contacts> Contacts { get; set; }
+        public virtual DbSet<Documents> Documents { get; set; }
+        public virtual DbSet<Leads> Leads { get; set; }
+        public virtual DbSet<Notes> Notes { get; set; }
         public virtual DbSet<ProductList> ProductList { get; set; }
-        public virtual DbSet<ProductMaster> ProductMaster { get; set; }
-        public virtual DbSet<RoleMaster> RoleMaster { get; set; }
-        public virtual DbSet<RolePermission> RolePermission { get; set; }
-        public virtual DbSet<UserMaster> UserMaster { get; set; }
-        public virtual DbSet<UserRole> UserRole { get; set; }
+        public virtual DbSet<Products> Products { get; set; }
+        public virtual DbSet<ReferenceLookup> ReferenceLookup { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<AccountMaster>(entity =>
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Accounts>(entity =>
             {
                 entity.HasKey(e => e.AccountId);
 
-                entity.Property(e => e.AccountId).ValueGeneratedNever();
+                entity.ToTable("Accounts", "dbo");
+
+                entity.Property(e => e.AccountId).HasColumnName("AccountID");
 
                 entity.Property(e => e.AccountName).IsRequired();
 
+                entity.Property(e => e.CampaignId).HasColumnName("CampaignID");
+
                 entity.Property(e => e.CreatedDateTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.Employees)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FlagActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.IndustryId).HasColumnName("IndustryID");
+
+                entity.Property(e => e.IndustrySubTypeId).HasColumnName("IndustrySubTypeID");
 
                 entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
 
-                entity.Property(e => e.Source)
+                entity.Property(e => e.ParentId).HasColumnName("ParentID");
+
+                entity.Property(e => e.Turnover)
                     .HasMaxLength(50)
                     .IsUnicode(false);
-
-                entity.Property(e => e.TurnOver).HasColumnType("money");
 
                 entity.Property(e => e.Type).HasMaxLength(50);
 
-                entity.Property(e => e.WebSite)
-                    .IsRequired()
-                    .HasMaxLength(50)
+                entity.Property(e => e.Website)
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.CreatedByNavigation)
-                    .WithMany(p => p.AccountMasterCreatedByNavigation)
-                    .HasForeignKey(d => d.CreatedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_AccountMaster_CreatedBy");
+                entity.Property(e => e.WorkPhoneAlternate)
+                    .HasColumnName("WorkPhone_Alternate")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
-                entity.HasOne(d => d.ModifiedByNavigation)
-                    .WithMany(p => p.AccountMasterModifiedByNavigation)
-                    .HasForeignKey(d => d.ModifiedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_AccountMaster_ModifiedBy");
+                entity.Property(e => e.WorkPhoneMain)
+                    .HasColumnName("WorkPhone_Main")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
             });
 
-            modelBuilder.Entity<ActivityList>(entity =>
+            modelBuilder.Entity<Activities>(entity =>
             {
                 entity.HasKey(e => e.ActivityId);
 
+                entity.ToTable("Activities", "dbo");
+
                 entity.Property(e => e.ActivityEndTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.ActivityLocation).IsRequired();
 
                 entity.Property(e => e.ActivityStartTime).HasColumnType("smalldatetime");
 
+                entity.Property(e => e.ActivityTitle).IsRequired();
+
                 entity.Property(e => e.CreatedDateTime).HasColumnType("smalldatetime");
 
-                entity.Property(e => e.Km)
-                    .HasColumnName("KM")
-                    .HasMaxLength(50);
+                entity.Property(e => e.FlagActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
 
-                entity.Property(e => e.Source)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Type)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.HasOne(d => d.CreatedByNavigation)
-                    .WithMany(p => p.ActivityListCreatedByNavigation)
-                    .HasForeignKey(d => d.CreatedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ActivityList_CreatedBy");
-
-                entity.HasOne(d => d.ModifiedByNavigation)
-                    .WithMany(p => p.ActivityListModifiedByNavigation)
-                    .HasForeignKey(d => d.ModifiedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ActivityList_ModifiedBy");
+                entity.Property(e => e.ReferenceId).HasColumnName("ReferenceID");
             });
 
-            modelBuilder.Entity<CompetitorList>(entity =>
+            modelBuilder.Entity<Address>(entity =>
+            {
+                entity.ToTable("Address", "dbo");
+
+                entity.Property(e => e.AddressId).HasColumnName("AddressID");
+
+                entity.Property(e => e.AccountId).HasColumnName("AccountID");
+
+                entity.Property(e => e.City).HasMaxLength(50);
+
+                entity.Property(e => e.Country).HasMaxLength(50);
+
+                entity.Property(e => e.CreatedDateTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.FlagActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.Landmark).HasMaxLength(100);
+
+                entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.Pincode).HasMaxLength(50);
+
+                entity.Property(e => e.Remarks).HasMaxLength(100);
+
+                entity.Property(e => e.State).HasMaxLength(50);
+
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.Address)
+                    .HasForeignKey(d => d.AccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_dbo.Address_dbo.Accounts_AccountID");
+            });
+
+            modelBuilder.Entity<Competitors>(entity =>
             {
                 entity.HasKey(e => e.CompetitorId);
+
+                entity.ToTable("Competitors", "dbo");
 
                 entity.Property(e => e.Amount).HasColumnType("money");
 
                 entity.Property(e => e.CreatedDateTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.FlagActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
 
                 entity.Property(e => e.Name).IsUnicode(false);
 
                 entity.Property(e => e.Remarks).IsUnicode(false);
-
-                entity.Property(e => e.Source)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.HasOne(d => d.CreatedByNavigation)
-                    .WithMany(p => p.CompetitorListCreatedByNavigation)
-                    .HasForeignKey(d => d.CreatedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CompetitorList_CreatedBy");
-
-                entity.HasOne(d => d.ModifiedByNavigation)
-                    .WithMany(p => p.CompetitorListModifiedByNavigation)
-                    .HasForeignKey(d => d.ModifiedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CompetitorList_ModifiedBy");
             });
 
-            modelBuilder.Entity<ContactsList>(entity =>
+            modelBuilder.Entity<Contacts>(entity =>
             {
                 entity.HasKey(e => e.ContactId);
 
-                entity.Property(e => e.ContactName).IsUnicode(false);
+                entity.ToTable("Contacts", "dbo");
+
+                entity.Property(e => e.ContactId)
+                    .HasColumnName("ContactID")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.AccountId).HasColumnName("AccountID");
+
+                entity.Property(e => e.AddressLine1)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.AddressLine2)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.AddressLine3)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CampaignId).HasColumnName("CampaignID");
+
+                entity.Property(e => e.City)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ContactFirstName).IsUnicode(false);
+
+                entity.Property(e => e.ContactLastName).IsUnicode(false);
 
                 entity.Property(e => e.CreatedDateTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.DateOfBirth).HasColumnType("date");
 
                 entity.Property(e => e.Department).IsUnicode(false);
 
@@ -153,74 +205,131 @@ namespace hasslefreeAPI.Entities
 
                 entity.Property(e => e.Email).IsUnicode(false);
 
-                entity.Property(e => e.MobileNumber)
+                entity.Property(e => e.Facebook)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FlagActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.GenderId).HasColumnName("GenderID");
+
+                entity.Property(e => e.GooglePlus)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.MobilePhone)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
 
-                entity.Property(e => e.OfficePhone)
+                entity.Property(e => e.PostalCode)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Source)
+                entity.Property(e => e.State)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.CreatedByNavigation)
-                    .WithMany(p => p.ContactsListCreatedByNavigation)
-                    .HasForeignKey(d => d.CreatedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ContactsList_CreatedBy");
+                entity.Property(e => e.Twitter)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.HasOne(d => d.ModifiedByNavigation)
-                    .WithMany(p => p.ContactsListModifiedByNavigation)
-                    .HasForeignKey(d => d.ModifiedBy)
+                entity.Property(e => e.WorkPhone)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Contact)
+                    .WithOne(p => p.Contacts)
+                    .HasForeignKey<Contacts>(d => d.ContactId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ContactsList_ModifiedBy");
+                    .HasConstraintName("FK_dbo.Contacts_dbo.Accounts_AccountID");
             });
 
-            modelBuilder.Entity<DocumentList>(entity =>
+            modelBuilder.Entity<Documents>(entity =>
             {
                 entity.HasKey(e => e.DocumentId);
+
+                entity.ToTable("Documents", "dbo");
 
                 entity.Property(e => e.CreatedDateTime).HasColumnType("smalldatetime");
 
                 entity.Property(e => e.FileName).IsRequired();
 
+                entity.Property(e => e.FlagActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
 
-                entity.Property(e => e.Source)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.Type).HasMaxLength(50);
-
-                entity.HasOne(d => d.CreatedByNavigation)
-                    .WithMany(p => p.DocumentListCreatedByNavigation)
-                    .HasForeignKey(d => d.CreatedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_DocumentList_CreatedBy");
-
-                entity.HasOne(d => d.ModifiedByNavigation)
-                    .WithMany(p => p.DocumentListModifiedByNavigation)
-                    .HasForeignKey(d => d.ModifiedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_DocumentList_ModifiedBy");
             });
 
-            modelBuilder.Entity<LeadTransaction>(entity =>
+            modelBuilder.Entity<Leads>(entity =>
             {
                 entity.HasKey(e => e.LeadId);
 
-                entity.Property(e => e.Accategory).HasColumnName("ACCategory");
+                entity.ToTable("Leads", "dbo");
 
-                entity.Property(e => e.BuyerRef)
-                    .IsRequired()
+                entity.Property(e => e.AccountId).HasColumnName("AccountID");
+
+                entity.Property(e => e.AddressLine1)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.AddressLine2)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.AddressLine3)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.City)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ClosingDate).HasColumnType("smalldatetime");
+                entity.Property(e => e.CompanyAddressLine1)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CompanyAddressLine2)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CompanyAddressLine3)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CompanyCity)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CompanyName)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CompanyPostalCode)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CompanyState)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CompanyTurnover)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CompanyWebsite)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ContactId).HasColumnName("ContactID");
+
+                entity.Property(e => e.Converted).HasColumnName("CONVERTED");
 
                 entity.Property(e => e.CreatedDateTime).HasColumnType("smalldatetime");
 
@@ -228,304 +337,133 @@ namespace hasslefreeAPI.Entities
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Email)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FlagActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.IndustryId).HasColumnName("IndustryID");
+
+                entity.Property(e => e.IndustrySubTypeId).HasColumnName("IndustrySubTypeID");
+
                 entity.Property(e => e.LeadDate).HasColumnType("smalldatetime");
 
-                entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
-
-                entity.HasOne(d => d.CreatedByNavigation)
-                    .WithMany(p => p.LeadTransactionCreatedByNavigation)
-                    .HasForeignKey(d => d.CreatedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_LeadTransaction_CreatedBy");
-
-                entity.HasOne(d => d.ModifiedByNavigation)
-                    .WithMany(p => p.LeadTransactionModifiedByNavigation)
-                    .HasForeignKey(d => d.ModifiedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_LeadTransaction_ModifiedBy");
-            });
-
-            modelBuilder.Entity<MappingInfo>(entity =>
-            {
-                entity.HasKey(e => e.MappingId);
-
-                entity.Property(e => e.ChildType)
+                entity.Property(e => e.LeadFirstName)
                     .IsRequired()
-                    .HasMaxLength(50);
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.CreatedDateTime).HasColumnType("smalldatetime");
+                entity.Property(e => e.LeadLastName)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
-
-                entity.Property(e => e.ParentType)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.HasOne(d => d.CreatedByNavigation)
-                    .WithMany(p => p.MappingInfoCreatedByNavigation)
-                    .HasForeignKey(d => d.CreatedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_MappingInfo_CreatedBy");
-
-                entity.HasOne(d => d.ModifiedByNavigation)
-                    .WithMany(p => p.MappingInfoModifiedByNavigation)
-                    .HasForeignKey(d => d.ModifiedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_MappingInfo_ModifiedBy");
-            });
-
-            modelBuilder.Entity<NotesList>(entity =>
-            {
-                entity.HasKey(e => e.NotesId);
-
-                entity.Property(e => e.NotesId).ValueGeneratedNever();
-
-                entity.Property(e => e.CreatedDateTime).HasColumnType("smalldatetime");
-
-                entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
-
-                entity.Property(e => e.NotesDescription).IsRequired();
-
-                entity.Property(e => e.Source)
+                entity.Property(e => e.MobilePhone)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.CreatedByNavigation)
-                    .WithMany(p => p.NotesListCreatedByNavigation)
-                    .HasForeignKey(d => d.CreatedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_NotesList_CreatedBy");
+                entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
 
-                entity.HasOne(d => d.ModifiedByNavigation)
-                    .WithMany(p => p.NotesListModifiedByNavigation)
-                    .HasForeignKey(d => d.ModifiedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_NotesList_ModifiedBy");
+                entity.Property(e => e.OpportunityId).HasColumnName("OpportunityID");
+
+                entity.Property(e => e.PostalCode)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.State)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.WorkPhone)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.Leads)
+                    .HasForeignKey(d => d.AccountId)
+                    .HasConstraintName("FK_dbo.Leads_dbo.Accounts_AccountID");
             });
 
-            modelBuilder.Entity<PermissionMaster>(entity =>
+            modelBuilder.Entity<Notes>(entity =>
             {
-                entity.HasKey(e => e.PermissionId);
+                entity.ToTable("Notes", "dbo");
 
                 entity.Property(e => e.CreatedDateTime).HasColumnType("smalldatetime");
 
                 entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
 
-                entity.Property(e => e.UielementCode)
+                entity.Property(e => e.Notes1)
                     .IsRequired()
-                    .HasColumnName("UIELEMENT_CODE")
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.UielementDescription).HasColumnName("UIELEMENT_Description");
-
-                entity.HasOne(d => d.CreatedByNavigation)
-                    .WithMany(p => p.PermissionMasterCreatedByNavigation)
-                    .HasForeignKey(d => d.CreatedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PermissionMaster_CreatedBy");
-
-                entity.HasOne(d => d.ModifiedByNavigation)
-                    .WithMany(p => p.PermissionMasterModifiedByNavigation)
-                    .HasForeignKey(d => d.ModifiedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PermissionMaster_ModifiedBy");
+                    .HasColumnName("Notes");
             });
 
             modelBuilder.Entity<ProductList>(entity =>
             {
-                entity.Property(e => e.ProductListId).ValueGeneratedNever();
+                entity.ToTable("ProductList", "dbo");
 
                 entity.Property(e => e.Amount).HasColumnType("money");
 
                 entity.Property(e => e.CreatedDateTime).HasColumnType("smalldatetime");
 
+                entity.Property(e => e.FlagActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
 
                 entity.Property(e => e.Rate).HasColumnType("money");
 
-                entity.Property(e => e.Source)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.Property(e => e.ReferenceId).HasColumnName("ReferenceID");
 
                 entity.Property(e => e.TaxAmount).HasColumnType("money");
 
                 entity.Property(e => e.Uom).HasColumnName("UOM");
-
-                entity.HasOne(d => d.CreatedByNavigation)
-                    .WithMany(p => p.ProductListCreatedByNavigation)
-                    .HasForeignKey(d => d.CreatedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ProductList_CreatedBy");
-
-                entity.HasOne(d => d.ModifiedByNavigation)
-                    .WithMany(p => p.ProductListModifiedByNavigation)
-                    .HasForeignKey(d => d.ModifiedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ProductList_ModifiedBy");
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.ProductList)
-                    .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ProductList_ProductId");
             });
 
-            modelBuilder.Entity<ProductMaster>(entity =>
+            modelBuilder.Entity<Products>(entity =>
             {
                 entity.HasKey(e => e.ProductId);
 
+                entity.ToTable("Products", "dbo");
+
                 entity.Property(e => e.CreatedDateTime).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.FlagActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
 
                 entity.Property(e => e.Name).IsUnicode(false);
 
                 entity.Property(e => e.Rate).HasColumnType("money");
-
-                entity.Property(e => e.Uom).HasColumnName("UOM");
-
-                entity.HasOne(d => d.CreatedByNavigation)
-                    .WithMany(p => p.ProductMasterCreatedByNavigation)
-                    .HasForeignKey(d => d.CreatedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ProductMaster_CreatedBy");
-
-                entity.HasOne(d => d.ModifiedByNavigation)
-                    .WithMany(p => p.ProductMasterModifiedByNavigation)
-                    .HasForeignKey(d => d.ModifiedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ProductMaster_ModifiedBy");
             });
 
-            modelBuilder.Entity<RoleMaster>(entity =>
+            modelBuilder.Entity<ReferenceLookup>(entity =>
             {
-                entity.HasKey(e => e.RoleId);
+                entity.ToTable("ReferenceLookup", "dbo");
 
-                entity.Property(e => e.CreatedDateTime).HasColumnType("smalldatetime");
+                entity.Property(e => e.ReferenceLookupId).HasColumnName("ReferenceLookupID");
 
-                entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
-
-                entity.Property(e => e.RoleDescription)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.RoleName)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.HasOne(d => d.CreatedByNavigation)
-                    .WithMany(p => p.RoleMasterCreatedByNavigation)
-                    .HasForeignKey(d => d.CreatedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_RoleMaster_CreatedBy");
-
-                entity.HasOne(d => d.ModifiedByNavigation)
-                    .WithMany(p => p.RoleMasterModifiedByNavigation)
-                    .HasForeignKey(d => d.ModifiedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_RoleMaster_ModifiedBy");
-            });
-
-            modelBuilder.Entity<RolePermission>(entity =>
-            {
-                entity.Property(e => e.RolePermissionId).ValueGeneratedNever();
-
-                entity.Property(e => e.CreatedDateTime).HasColumnType("smalldatetime");
-
-                entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
-
-                entity.HasOne(d => d.CreatedByNavigation)
-                    .WithMany(p => p.RolePermissionCreatedByNavigation)
-                    .HasForeignKey(d => d.CreatedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_RolePermission_CreatedBy");
-
-                entity.HasOne(d => d.ModifiedByNavigation)
-                    .WithMany(p => p.RolePermissionModifiedByNavigation)
-                    .HasForeignKey(d => d.ModifiedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_RolePermission_ModifedBy");
-
-                entity.HasOne(d => d.Permission)
-                    .WithMany(p => p.RolePermission)
-                    .HasForeignKey(d => d.PermissionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_RolePermission_PermissionId");
-
-                entity.HasOne(d => d.Role)
-                    .WithMany(p => p.RolePermission)
-                    .HasForeignKey(d => d.RoleId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_RolePermission_RoleId");
-            });
-
-            modelBuilder.Entity<UserMaster>(entity =>
-            {
-                entity.HasKey(e => e.UserId);
-
-                entity.Property(e => e.CreatedDateTime).HasColumnType("smalldatetime");
-
-                entity.Property(e => e.Email).HasMaxLength(50);
-
-                entity.Property(e => e.FirstName)
+                entity.Property(e => e.Category)
                     .IsRequired()
                     .HasMaxLength(50);
 
-                entity.Property(e => e.LastAccessedDateTime).HasColumnType("smalldatetime");
-
-                entity.Property(e => e.LastAccessedIp)
-                    .HasColumnName("LastAccessedIP")
-                    .HasMaxLength(15);
-
-                entity.Property(e => e.LastName).HasMaxLength(50);
-
-                entity.Property(e => e.LoginName).HasMaxLength(50);
-
-                entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
-
-                entity.Property(e => e.Password).HasMaxLength(50);
-
-                entity.HasOne(d => d.CreatedByNavigation)
-                    .WithMany(p => p.InverseCreatedByNavigation)
-                    .HasForeignKey(d => d.CreatedBy)
-                    .HasConstraintName("FK_UserMaster_CreatedBy");
-
-                entity.HasOne(d => d.ModifiedByNavigation)
-                    .WithMany(p => p.InverseModifiedByNavigation)
-                    .HasForeignKey(d => d.ModifiedBy)
-                    .HasConstraintName("FK_UserMaster_ModifiedBy");
-            });
-
-            modelBuilder.Entity<UserRole>(entity =>
-            {
                 entity.Property(e => e.CreatedDateTime).HasColumnType("smalldatetime");
 
+                entity.Property(e => e.FlagActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
 
-                entity.HasOne(d => d.CreatedByNavigation)
-                    .WithMany(p => p.UserRoleCreatedByNavigation)
-                    .HasForeignKey(d => d.CreatedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_UserRole_CreatedBy");
+                entity.Property(e => e.SubCategory).HasMaxLength(50);
 
-                entity.HasOne(d => d.ModifiedByNavigation)
-                    .WithMany(p => p.UserRoleModifiedByNavigation)
-                    .HasForeignKey(d => d.ModifiedBy)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_UserRole_ModifiedBy");
-
-                entity.HasOne(d => d.Role)
-                    .WithMany(p => p.UserRole)
-                    .HasForeignKey(d => d.RoleId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_UserRole_RoleId");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.UserRoleUser)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_UserRole_UserId");
+                entity.Property(e => e.Type)
+                    .IsRequired()
+                    .HasMaxLength(50);
             });
         }
     }

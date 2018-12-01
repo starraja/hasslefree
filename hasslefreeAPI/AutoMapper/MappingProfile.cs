@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using hasslefreeAPI.Entities;
+//using hasslefreeAPI.Entities;
 using hasslefreeAPI.Models;
 using System;
 using System.Collections.Generic;
@@ -12,9 +12,9 @@ namespace hasslefreeAPI.AutoMapper
     {
         public MappingProfile()
         {
-            CreateMap<UserDto, UserMaster>();
-            CreateMap<UserMaster, UserDto>();
-            CreateMap<CreateUserDto, UserMaster>();
+            //CreateMap<UserDto, UserMaster>();
+            //CreateMap<UserMaster, UserDto>();
+            //CreateMap<CreateUserDto, UserMaster>();
         }
     }
 }
