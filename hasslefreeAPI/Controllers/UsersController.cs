@@ -1,87 +1,100 @@
-﻿using hasslefreeAPI.Helpers;
-using Microsoft.AspNetCore.Authorization;
+﻿using hasslefreeAPI.Interface;
+using hasslefreeAPI.Models;
+using hasslefreeAPI.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace hasslefreeAPI.Controllers
 {
-    [Authorize]
+
     [Route("api/[controller]")]
-    [ApiController]
-    public class UsersController : ControllerBase
+    public class UserController : Controller
     {
-        private readonly AppSettings _appSettings;
-        // private IMemoryCache cache;
-        private AppMemoryCache cache;
-        public UsersController(
-           IOptions<AppSettings> appSettings, AppMemoryCache _cache)
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly IConfiguration _configuration;
+        private readonly IEmailSender _emailSender;
+        private readonly IUserService _userService;
+        public UserController(
+            UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signInManager,
+            IConfiguration configuration,
+            IEmailSender emailSender,
+            IUserService userService
+            )
+
         {
-            _appSettings = appSettings.Value;
-            this.cache = _cache;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _configuration = configuration;
+            _emailSender = emailSender;
+            _userService = userService;
         }
 
-
-
-        // GET api/values
-        //[HttpGet]
-        //public ActionResult<IEnumerable<string>> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
-
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        [HttpPost("Login")]
+        public async Task<UserDto> Login([FromBody] CreateUserDto model)
         {
-            return "value";
-        }
+            
+            var result = await _signInManager.PasswordSignInAsync(model.LoginName, model.Password, false, false);
 
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
-
-        [AllowAnonymous]
-        [HttpGet]
-        public ActionResult<string> GenerateToken()
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
-            var tokenDescriptor = new SecurityTokenDescriptor
+            if (result.Succeeded)
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, "Ranga")//TO DO: Replace with User ID
-                }),
-                Expires = DateTime.UtcNow.AddDays(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                IdentityUser appUser = _userManager.Users.SingleOrDefault(r => r.Email == model.Email);
+                return _userService.GenerateJwtToken(model.Email, appUser);
+            }
+            if (result.IsNotAllowed) {
+                return new UserDto { SignInErrors =new List<string> { "Email Verification Pending." } };
+            }
+            
+            return new UserDto { SignInErrors = new List<string> { "UserName or Password is Invalid." } };
+        }
+
+        [HttpPost("CreateUser")]
+        public async Task<ActionResult<UserDto>> CreateUser([FromBody] CreateUserDto model)
+        {
+            IdentityUser user = new IdentityUser
+            {
+                UserName = model.LoginName,
+                Email = model.Email
             };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
-            return Ok(new
+            IdentityResult result = await _userManager.CreateAsync(user, model.Password);
+           
+            if (result.Succeeded)
             {
-                Token = tokenString
-            });
+                string token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                _userService.SendConfirmationEmail(token, user.Email);
+                await _signInManager.SignInAsync(user, false);
+                return _userService.GenerateJwtToken(model.Email, user);
+            }
+
+            return new UserDto { IdentityError = result.Errors };
         }
+        [HttpPost("VerifyEmail")]
+        public async Task<object> VerifyEmail([FromBody]string username, [FromBody]string emailtoken)
+        {
+            IdentityUser user = await _userManager.FindByNameAsync(username);
+
+            IdentityResult result = await _userManager.ConfirmEmailAsync(user, emailtoken);
+
+            if (result.Succeeded)
+            {
+                await _signInManager.SignInAsync(user, false);
+                return Content("Email verified sucessfully");
+            }
+
+            return result.Errors;
+        }
+
+      
+
     }
 }

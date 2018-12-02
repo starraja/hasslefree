@@ -1,15 +1,29 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+using FluentValidation.AspNetCore;
+using hasslefreeAPI.Authorization;
+using hasslefreeAPI.AutoMapper;
+using hasslefreeAPI.Entities;
+using hasslefreeAPI.Extension;
 using hasslefreeAPI.Helpers;
+using hasslefreeAPI.Interface;
+using hasslefreeAPI.Models;
+//using hasslefreeAPI.Services;
+using hasslefreeAPI.Validators;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
+
 
 namespace hasslefreeAPI
 {
@@ -27,6 +41,16 @@ namespace hasslefreeAPI
         {
             //Caching the response of the API
             //services.AddResponseCaching();
+            var connection = Configuration["AppSettings:ConnectionString"];
+            //Db context
+            services.AddDbContext<HassleFreeContext>(options => options.UseSqlServer(connection));
+
+            services.AddIdentity<IdentityUser, IdentityRole>(config =>
+            {
+                config.SignIn.RequireConfirmedEmail = true;
+            })
+                  .AddEntityFrameworkStores<HassleFreeContext>()
+                  .AddDefaultTokenProviders();
 
             // In MemoryCache
             services.AddSingleton<AppMemoryCache>();
@@ -102,14 +126,37 @@ namespace hasslefreeAPI
                     ValidateAudience = false
                 };
             });
+            services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Permission", policyBuilder =>
+                {
+                    policyBuilder.Requirements.Add(new PermissionAuthorizationRequirement());
+                });
+            });
+
+            // Auto Mapper Configurations
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
+            // configure DI for application services
+            services.AddScopedImplementations();
             #endregion
 
-            services.AddMvc();
+            services.AddMvc()
+  .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<UserValidator>());
+            services.AddSendGridEmailSender();
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,IEmailSender _emailSender)
         {
             #region Caching
             //Caching
@@ -163,6 +210,16 @@ namespace hasslefreeAPI
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();
+            // _emailSender.SendEmailAsync(new SendEmailDetails
+            //{
+            //     Subject="asdasd",
+            //     Content = "asdasd",
+            //    FromEmail = "hasslefreecrm",
+            //    FromName = "System",
+            //    ToEmail = "sriram5052@gmail.com",
+            //    ToName = "Sriram"
+
+            //});
         }
     }
 }
