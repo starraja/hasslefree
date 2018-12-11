@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using hasslefreeAPI.Entities;
 //using hasslefreeAPI.Entities;
 using hasslefreeAPI.Models;
 using System;
@@ -15,6 +16,12 @@ namespace hasslefreeAPI.AutoMapper
             //CreateMap<UserDto, UserMaster>();
             //CreateMap<UserMaster, UserDto>();
             //CreateMap<CreateUserDto, UserMaster>();
+            CreateMap<LeadDto, Leads>();
+            CreateMap<Leads, LeadDto>();
+            CreateMap<ActivitiesDto, Activities>();
+            CreateMap<Activities, ActivitiesDto>();
+            CreateMap<NotesDto, Notes>();
+            CreateMap<Notes, NotesDto>();
         }
     }
 }
