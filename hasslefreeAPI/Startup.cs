@@ -10,6 +10,7 @@ using hasslefreeAPI.Extension;
 using hasslefreeAPI.Helpers;
 using hasslefreeAPI.Interface;
 using hasslefreeAPI.Models;
+using hasslefreeAPI.Services;
 //using hasslefreeAPI.Services;
 using hasslefreeAPI.Validators;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -45,7 +46,7 @@ namespace hasslefreeAPI
             //Db context
             services.AddDbContext<HassleFreeContext>(options => options.UseSqlServer(connection));
 
-            services.AddIdentity<IdentityUser, IdentityRole>(config =>
+            services.AddIdentity<ApplicationUser, IdentityRole>(config =>
             {
                 config.SignIn.RequireConfirmedEmail = true;
             })
@@ -98,24 +99,6 @@ namespace hasslefreeAPI
             })
             .AddJwtBearer(x =>
             {
-                x.Events = new JwtBearerEvents
-                {
-                    OnMessageReceived = context =>
-                    {
-                        return Task.FromResult(true);
-                    },
-                    OnAuthenticationFailed = context =>
-                    {
-                        return Task.CompletedTask;
-                    },
-                    OnTokenValidated = context =>
-                    {
-                        //TO DO: Perform Authorization of User.
-                        //Check if the user have permission to execute the API. 
-                        //Otherwise Reject it as Unauthorized
-                        return Task.CompletedTask;
-                    }
-                };
                 x.RequireHttpsMetadata = false;
                 x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters

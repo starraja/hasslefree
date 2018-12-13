@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace hasslefreeAPI.Entities
 {
-    public partial class HassleFreeContext : IdentityDbContext
+    public partial class HassleFreeContext : IdentityDbContext<ApplicationUser>
     {
 
         public HassleFreeContext(DbContextOptions<HassleFreeContext> options)
@@ -24,7 +24,6 @@ namespace hasslefreeAPI.Entities
         public virtual DbSet<ProductList> ProductList { get; set; }
         public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<ReferenceLookup> ReferenceLookup { get; set; }
-        public virtual DbSet<Employee> Employee { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -466,28 +465,6 @@ namespace hasslefreeAPI.Entities
                     .IsRequired()
                     .HasMaxLength(50);
             });
-
-            modelBuilder.Entity<Employee>(entity =>
-            {
-                entity.HasKey(e => e.EmployeeId);
-
-                entity.ToTable("Employee", "dbo");
-
-                entity.Property(e => e.CreatedDateTime).HasColumnType("smalldatetime");
-
-                entity.Property(e => e.FlagActive)
-                    .IsRequired()
-                    .HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.ModifiedDateTime).HasColumnType("smalldatetime");
-
-                entity.Property(e => e.FirstName).HasMaxLength(100).IsUnicode(false);
-                entity.Property(e => e.LastName).HasMaxLength(100).IsUnicode(false);
-                entity.Property(e => e.Email).HasMaxLength(100).IsUnicode(false);
-                entity.Property(e => e.StaffID).HasMaxLength(100).IsUnicode(false);
-                                
-            });
-
         }
     }
 }
