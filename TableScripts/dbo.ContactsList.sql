@@ -23,7 +23,7 @@ CREATE TABLE [dbo].[ContactsList] (
     [MobileNumber]     VARCHAR (50)  NULL,
     [ContactTypeId]    SMALLINT      NULL,
     [ContactAuthority] SMALLINT      NULL,
-    [Source]           VARCHAR (50)  NULL,
+    [Source]           INT   NULL,
     [ReferenceId]      INT           NULL,
     [CreatedBy]        INT           NOT NULL,
     [CreatedDateTime]  SMALLDATETIME NOT NULL,

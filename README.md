@@ -1,6 +1,8 @@
 # hasslefree
 Hasslefree CRM
 
+
+=======
 There are three parts to the Application
 SQL Server which contains the Tables and Stored procedures and acts as Data Source
 

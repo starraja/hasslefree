@@ -21,7 +21,7 @@ CREATE TABLE [dbo].[ProductList] (
     [Discount]         FLOAT (53)    NULL,
     [TaxAmount]        MONEY         NULL,
     [Amount]           MONEY         NULL,
-    [Source]           VARCHAR (50)  NULL,
+    [Source]           INT   NULL,
     [ReferenceId]      INT           NULL,
     [CreatedBy]        INT           NOT NULL,
     [CreatedDateTime]  SMALLDATETIME NOT NULL,

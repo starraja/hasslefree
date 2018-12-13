@@ -15,7 +15,7 @@ GO
 CREATE TABLE [dbo].[NotesList] (
     [NotesId]          INT            NOT NULL,
     [NotesDescription] NVARCHAR (MAX) NOT NULL,
-    [Source]           VARCHAR (50)   NULL,
+    [Source]           INT   NULL,
     [ReferenceId]      INT            NULL,
     [CreatedBy]        INT            NOT NULL,
     [CreatedDateTime]  SMALLDATETIME  NOT NULL,
