@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -88,11 +89,11 @@ namespace hasslefreeAPI.Services
         //    // return users without passwords
         //    return _mapper.Map<UserDto[]>(_context.UserMaster.ToArray());
         //}
-        public  UserDto GenerateJwtToken(string email, IdentityUser user)
+        public UserDto GenerateJwtToken(IdentityUser user)
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, email),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.Id)
             };
@@ -108,12 +109,12 @@ namespace hasslefreeAPI.Services
                 expires: expires,
                 signingCredentials: creds
             );
-            UserDto userdto =new UserDto {FirstName=user.UserName};
-            userdto.Token= new JwtSecurityTokenHandler().WriteToken(token);
+            UserDto userdto = new UserDto { FirstName = user.UserName };
+            userdto.Token = new JwtSecurityTokenHandler().WriteToken(token);
             return userdto;
         }
 
-        public void SendConfirmationEmail(string Token,string email)
+        public void SendConfirmationEmail(string Token, string email, string username)
         {
             try
             {
@@ -122,11 +123,25 @@ namespace hasslefreeAPI.Services
                 client.EnableSsl = false;
                 client.Port = 587;
                 client.Credentials = new NetworkCredential("administrator@hasslefreecrm.com", "Asdf@123");
+                string body = string.Empty;
+                //using streamreader for reading my htmltemplate   
+
+                using (StreamReader reader = new StreamReader("./Templates/EmailTemplate.html"))
+
+                {
+
+                    body = reader.ReadToEnd();
+
+                }
+
+                body = body.Replace("{{emaillink}}", "http://localhost:4200/emailverify?username=" + username + "token=" + Token);
+                body = body.Replace("[USER NAME]", username);
 
                 MailMessage mailMessage = new MailMessage();
                 mailMessage.From = new MailAddress("administrator@hasslefreecrm.com");
                 mailMessage.To.Add(email);
-                mailMessage.Body = Token;
+                mailMessage.Body = body;
+                mailMessage.IsBodyHtml = true;
                 mailMessage.Subject = "subject";
                 client.Send(mailMessage);
             }
@@ -135,7 +150,7 @@ namespace hasslefreeAPI.Services
 
                 throw ex;
             }
-         
+
         }
     }
 }

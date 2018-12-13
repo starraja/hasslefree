@@ -9,7 +9,7 @@ namespace hasslefreeAPI.Services
         //        UserDto Authenticate(string username, string password);
         //        IEnumerable<UserDto> GetAllUsers();
         //        UserDto CreateUser(CreateUserDto createUser);
-        UserDto GenerateJwtToken(string email, IdentityUser user);
-        void SendConfirmationEmail(string token,string email);
+        UserDto GenerateJwtToken(IdentityUser user);
+        void SendConfirmationEmail(string token,string email, string username);
     }
 }

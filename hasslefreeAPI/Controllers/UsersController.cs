@@ -1,4 +1,5 @@
-﻿using hasslefreeAPI.Interface;
+﻿using hasslefreeAPI.Entities;
+using hasslefreeAPI.Interface;
 using hasslefreeAPI.Models;
 using hasslefreeAPI.Services;
 using Microsoft.AspNetCore.Identity;
@@ -19,14 +20,14 @@ namespace hasslefreeAPI.Controllers
     [Route("api/[controller]")]
     public class UserController : Controller
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
         private readonly IEmailSender _emailSender;
         private readonly IUserService _userService;
         public UserController(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
             IConfiguration configuration,
             IEmailSender emailSender,
             IUserService userService
@@ -41,15 +42,15 @@ namespace hasslefreeAPI.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<UserDto> Login([FromBody] CreateUserDto model)
+        public async Task<UserDto> Login([FromBody] CreateUserDto user)
         {
             
-            var result = await _signInManager.PasswordSignInAsync(model.LoginName, model.Password, false, false);
+            var result = await _signInManager.PasswordSignInAsync(user.LoginName, user.Password, false, false);
 
             if (result.Succeeded)
             {
-                IdentityUser appUser = _userManager.Users.SingleOrDefault(r => r.Email == model.Email);
-                return _userService.GenerateJwtToken(model.Email, appUser);
+                ApplicationUser appUser = _userManager.Users.SingleOrDefault(r => r.UserName == user.LoginName);
+                return _userService.GenerateJwtToken(appUser);
             }
             if (result.IsNotAllowed) {
                 return new UserDto { SignInErrors =new List<string> { "Email Verification Pending." } };
@@ -59,31 +60,31 @@ namespace hasslefreeAPI.Controllers
         }
 
         [HttpPost("CreateUser")]
-        public async Task<ActionResult<UserDto>> CreateUser([FromBody] CreateUserDto model)
+        public async Task<ActionResult<UserDto>> CreateUser([FromBody] CreateUserDto user)
         {
-            IdentityUser user = new IdentityUser
+            ApplicationUser iuser = new ApplicationUser
             {
-                UserName = model.LoginName,
-                Email = model.Email
+                UserName = user.LoginName,
+                Email = user.Email
             };
-            IdentityResult result = await _userManager.CreateAsync(user, model.Password);
+            IdentityResult result = await _userManager.CreateAsync(iuser, user.Password);
            
             if (result.Succeeded)
             {
-                string token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                _userService.SendConfirmationEmail(token, user.Email);
-                await _signInManager.SignInAsync(user, false);
-                return _userService.GenerateJwtToken(model.Email, user);
+                string token = await _userManager.GenerateEmailConfirmationTokenAsync(iuser);
+                _userService.SendConfirmationEmail(token, user.Email,user.LoginName);
+                await _signInManager.SignInAsync(iuser, false);
+                return _userService.GenerateJwtToken(iuser);
             }
 
             return new UserDto { IdentityError = result.Errors };
         }
         [HttpPost("VerifyEmail")]
-        public async Task<object> VerifyEmail([FromBody]string username, [FromBody]string emailtoken)
+        public async Task<object> VerifyEmail([FromBody]UserMailConfirmDto usermail)
         {
-            IdentityUser user = await _userManager.FindByNameAsync(username);
+            ApplicationUser user = await _userManager.FindByNameAsync(usermail.UserName);
 
-            IdentityResult result = await _userManager.ConfirmEmailAsync(user, emailtoken);
+            IdentityResult result = await _userManager.ConfirmEmailAsync(user, usermail.Token);
 
             if (result.Succeeded)
             {

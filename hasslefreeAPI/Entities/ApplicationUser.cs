@@ -4,6 +4,6 @@ namespace hasslefreeAPI.Entities
 {
     public class ApplicationUser:IdentityUser
     {
-        public virtual Employee Employee { get; set; }
+        //public int UserId { get; set; }
     }
 }
