@@ -1,0 +1,508 @@
+<div id="addLead" class="page-layout carded fullwidth" *ngIf="addComp">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent" fxLayout="column" fxLayoutAlign="center center" fxLayout.gt-sm="row"
+            fxLayoutAlign.gt-sm="space-between center">
+
+            <!-- APP TITLE -->
+            <div class="logo mb-24 mb-md-0" fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon class="logo-icon s-32 mr-16" [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
+                    account_circle
+                </mat-icon>
+                <span class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    New Lead
+                </span>
+            </div>
+            <!-- / APP TITLE -->
+
+            <!-- SEARCH -->
+            <!-- <div class="search-wrapper mx-32 mx-md-0">
+                <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon>search</mat-icon>
+                    <input #filter placeholder="Search field">
+                </div>
+            </div> -->
+
+            <div class="search-wrapper mx-32 mx-md-0">
+                <div class="search">
+                    <input type="text" placeholder="Pick one" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto4">
+                    <mat-autocomplete #auto4="matAutocomplete" (optionSelected)=selected($event)>
+                      <mat-option *ngFor="let option of filteredOptions | async" [value]="option.value"  >
+                        {{option.value}}
+                      </mat-option>
+                    </mat-autocomplete>
+                    <!-- <input type="text" placeholder="Search field" aria-label="Number" matInput [matAutocomplete]="auto5">
+                    <mat-autocomplete #auto5="matAutocomplete" (optionSelected)=selected($event)>
+                        <mat-option *ngFor="let option of searchFields" [value]="option.value">
+                            {{option.value}}
+                        </mat-option>
+                    </mat-autocomplete> -->
+                </div>
+            </div>
+            <!-- / SEARCH -->
+            <button mat-raised-button class="add-product-button fuse-white mt-24 mt-md-0"
+             (click)="addComp=false">
+                <span>Back</span>
+            </button>
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+
+            <mat-vertical-stepper [linear]="isLinear" #stepper>
+                <mat-step [stepControl]="firstFormGroup">
+                    <form [formGroup]="firstFormGroup">
+                        <ng-template matStepLabel>Basic information</ng-template>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Last name</mat-label>
+                                <input matInput formControlName="lastName"  id="Last name" placeholder="Enter value"
+                                    name="lastCtrl" required>
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>First name</mat-label>
+                                <input matInput placeholder="First name" id="First name" formControlName="firstName">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Owner</mat-label>
+                                <input type="text" matInput formControlName="ownerCtrl" 
+                                id="Owner"
+                                placeholder="Choose a value"
+                                    [matAutocomplete]="auto">
+                            </mat-form-field>
+                            <mat-autocomplete #auto="matAutocomplete">
+                                <mat-option>Sample</mat-option>
+                            </mat-autocomplete>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Lead stage</mat-label>
+                                <input type="text" matInput placeholder="Choose a value"
+                                #Leadstage id="Lead stage"
+                                    [matAutocomplete]="auto">
+                            </mat-form-field>
+                            <mat-autocomplete #auto="matAutocomplete">
+                                <mat-option>New</mat-option>
+                                <mat-option>Contacted</mat-option>
+                                <mat-option>Interested</mat-option>
+                                <mat-option>Under review</mat-option>
+                                <mat-option>Demo</mat-option>
+                                <mat-option>Unqualified</mat-option>
+                            </mat-autocomplete>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Job title</mat-label>
+                                <input matInput placeholder="Enter value" 
+                                id="Job title"
+                                name="jobtitleCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Tag</mat-label>
+                                <input matInput placeholder="Enter value"
+                                id="Tag"
+                                name="tagCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Department</mat-label>
+                                <input matInput placeholder="Enter value" 
+                                id="Department"
+                                name="departmentCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Email</mat-label>
+                                <input matInput id="Email" placeholder="Enter value" name="emailCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row" class="head">
+                            <span>NUMBERS</span> 
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Work</mat-label>
+                                <input matInput placeholder="Enter value" id="Work" name="workCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Mobile</mat-label>
+                                <input matInput placeholder="Enter value" id="Mobile" name="mobileCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="column">
+                            <mat-checkbox id="Has authority">Has authority</mat-checkbox>
+                            <mat-checkbox id="Do not distrub">Do not distrub</mat-checkbox>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Territory</mat-label>
+                                <input matInput placeholder="Enter value" id="Territory" name="territoryCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Time zone</mat-label>
+                                <input matInput placeholder="Enter value" id="Time zone" name="timezoneCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            LOCATION
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Address</mat-label>
+                                <input matInput placeholder="Enter value" id="Address" name="addressCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>City</mat-label>
+                                <input matInput placeholder="Enter value" id="City" name="cityCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>State</mat-label>
+                                <input matInput placeholder="Enter value" name="stateCtrl" id="State">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Zipcode</mat-label>
+                                <input matInput placeholder="Enter value" id="Zipcode" name="zipcodeCtrl" equired>
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Country</mat-label>
+                                <input matInput placeholder="Enter value" id="Country" name="countryCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            SOCIAL PROFILES
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Facebook</mat-label>
+                                <input matInput placeholder="Enter value" id="Facebook" name="facebookCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Twitter</mat-label>
+                                <input matInput placeholder="Enter value" id="Twitter" name="twitterCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>LinkedIn</mat-label>
+                                <input matInput placeholder="Enter value" id="LinkedIn" name="facebookCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            COMPANY INFORMATION
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Company name</mat-label>
+                                <input matInput placeholder="Enter value" id="Company name" name="companynameCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Company address</mat-label>
+                                <input matInput placeholder="Enter value" id="Company address" name="companyAddCtrl">
+                            </mat-form-field>
+                        </div>
+
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Company city</mat-label>
+                                <input matInput placeholder="Enter value" id="Company city" name="companycityCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Company state</mat-label>
+                                <input matInput placeholder="Enter value" id="Company state" name="companystateCtrl">
+                            </mat-form-field>
+                        </div>
+
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Company zipcode</mat-label>
+                                <input matInput placeholder="Enter value" id="Company zipcode" name="companyzipcodeCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Company country</mat-label>
+                                <input matInput placeholder="Enter value" id="Company country" name="companycountryCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Number of employees</mat-label>
+                                <input matInput placeholder="Enter value" id="NUmber of employees" name="employeesCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Company annual revenue</mat-label>
+                                <input matInput placeholder="Enter value" id="Company annual revenue" type="number" name="revenueCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Company website</mat-label>
+                                <input matInput placeholder="Enter value" id="Company website" name="websiteCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Company phone</mat-label>
+                                <input matInput placeholder="Enter value" id="Company phone" name="phoneCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Industry type</mat-label>
+                                <input matInput placeholder="Enter value" id="Industry type" name="IndustryCtrl">
+                            </mat-form-field>
+                        </div>
+
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Business type</mat-label>
+                                <input matInput placeholder="Enter value" id="Business type" name="BusinessCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            DEAL INFORMATION
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Deal name</mat-label>
+                                <input matInput placeholder="Enter value" id="Deal name" name="DealnameCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Deal value</mat-label>
+                                <input matInput placeholder="Enter value" id="Deal value" name="DealvalueCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Deal expected close date</mat-label>
+                                <input matInput placeholder="Enter value" id="Deal expected close date" name="DealcloseCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Product</mat-label>
+                                <input matInput placeholder="Enter value" id="Product" name="ProductCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            SOURCE INFORMATION
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Source</mat-label>
+                                <input matInput placeholder="Enter value" id="Source" name="SourceCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Campaign</mat-label>
+                                <input matInput placeholder="Enter value" id="Campaign" name="CampaignCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Medium</mat-label>
+                                <input matInput placeholder="Enter value" id="Medium" name="MediumCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row">
+                            <mat-form-field appearance="outline" fxFlex="50%">
+                                <mat-label>Keyword</mat-label>
+                                <input matInput placeholder="Enter value" id="Keyword" name="KeywordCtrl">
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <button mat-button matStepperNext>Next</button>
+                        </div>
+                    </form>
+                </mat-step>
+                <mat-step [stepControl]="secondFormGroup">
+
+                </mat-step>
+            </mat-vertical-stepper>
+
+        </div>
+        <!-- / CONTENT CARD -->
+    </div>
+    <!-- / CENTER -->
+</div>
+
+
+
+
+
+
+
+
+<div class="page-layout carded fullwidth" *ngIf="!addComp">
+    <div class="top-bg accent"></div>
+    <div class="center">
+            <div class="header accent" fxLayout="column" fxLayoutAlign="center center" fxLayout.gt-sm="row"
+            fxLayoutAlign.gt-sm="space-between center">
+
+            <!-- APP TITLE -->
+            <div class="logo mb-24 mb-md-0" fxLayout="row" fxLayoutAlign="start center">
+                    <!-- <button mat-icon-button class="logo-icon">
+                            <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" width="20px">
+                                <g fill="none" fill-rule="evenodd">
+                                    <path d="M2.5 93h281.027a.5.5 0 0 1 .5.5v46.004a.5.5 0 0 1-.5.5H2.5a.5.5 0 0 1-.5-.5V93.5a.5.5 0 0 1 .5-.5zM2.5 187.009h234.022a.5.5 0 0 1 .5.5v46.004a.5.5 0 0 1-.5.5H2.5a.5.5 0 0 1-.5-.5V187.51a.5.5 0 0 1 .5-.5zM2.5 281.018h281.027a.5.5 0 0 1 .5.5v46.004a.5.5 0 0 1-.5.5H2.5a.5.5 0 0 1-.5-.5v-46.004a.5.5 0 0 1 .5-.5zM2.5 375.027h163.516a.5.5 0 0 1 .5.5v46.004a.5.5 0 0 1-.5.5H2.5a.5.5 0 0 1-.5-.5v-46.004a.5.5 0 0 1 .5-.5z"
+                                        fill="#000"></path>
+                                    <path d="M399.538 350.45V164.58a.5.5 0 0 1 .822-.382l110.476 92.935a.5.5 0 0 1 0 .765L400.36 350.833a.5.5 0 0 1-.822-.382z"
+                                        fill="#030303" fill-rule="nonzero"></path>
+                                </g>
+                            </svg>
+                        </button> -->
+                        <mat-icon class="logo-icon s-32 mr-16" [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
+                                account_circle
+                            </mat-icon>
+                <span class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                     Lead
+                </span>
+            </div>
+                <div class="search-wrapper mx-32 mx-md-0">
+                       
+                    </div>
+                <!-- <mat-icon fxFlexOffset="5px" class="s-16">arrow_forward_ios</mat-icon> -->
+                        <button mat-flat-button color="primary">Import leads</button>
+                        <button mat-flat-button fxFlexOffset="5px">
+                            <svg viewBox="0 0 13 13" xmlns="http://www.w3.org/2000/svg" width="12px" class="valign-inline">
+                                <g stroke="#000" fill="none" fill-rule="evenodd" opacity=".5">
+                                    <rect x=".5" y=".5" width="12" height="12" rx="1"></rect>
+                                    <path fill="#D8D8D8" d="M.5 4.375h12V1a.5.5 0 0 0-.5-.5H1a.5.5 0 0 0-.5.5v3.375z"></path>
+                                    <path d="M4.469 1.406v10.375M8.531 1.406v10.375" stroke-linecap="square"></path>
+                                </g>
+                            </svg>
+                            Edit columns</button>
+                        <button mat-flat-button fxFlexOffset="5px" (click)="filter=!filter">
+                            <svg viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg" width="12px" class="valign-inline">
+                                <path d="M13 1H1l4.8 5.676V10.6l2.4 1.2V6.676z" stroke="#000" stroke-width="1.3" fill="none"
+                                    fill-rule="evenodd" opacity=".5" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                            Filter</button>
+                            <button mat-raised-button fxFlexOffset="5px" class="add-product-button fuse-white mt-24 mt-md-0" 
+                            (click)="addComp=!addComp">
+                                    <span>Add Lead</span>
+                                </button>
+           
+    </div>
+        <div class="content-card">
+        <div class="m-12" *ngIf="filter">
+            <div fxLayout="row" fxLayoutAlign="start center">
+                <div class="text-bold">Filter leads by</div>
+                <mat-form-field appearance="legacy" fxFlexOffset="10px">
+                    <mat-label>Field filter</mat-label>
+                    <mat-select placeholder="Add field to filter">
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let item of fieldfilter" [value]="item.value">
+                            {{item.value}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <div fxFlex fxFlexOffset="10px">
+                    <div fxLayout="row">
+                        <mat-form-field appearance="legacy" fxFlex="20%">
+                            <mat-label></mat-label>
+                            <mat-select [placeholder]="">
+                                <mat-option>Contains</mat-option>
+                                <mat-option>does not Contains</mat-option>
+                                <mat-option>is not empty(has any value)</mat-option>
+                                <mat-option>is empty</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div fxLayout="row">
+
+            </div>
+        </div>
+        <div class="m-12">
+            <p-table [columns]="cols" [value]="leads" dataKey="id">
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th width="60px">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th *ngFor="let col of columns">
+                            {{col.header}}
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                    <tr [pSelectableRow]="rowData">
+                        <td>
+                            <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                        </td>
+                        <td *ngFor="let col of columns">
+                            <div [ngSwitch]="col.field">
+                                <span *ngSwitchCase="'nameDetails'">
+                                    {{rowData.nameDetails.name}}
+                                    {{rowData.nameDetails.description}}
+                                </span>
+                                <!-- <p-cellEditor *ngSwitchDefault>
+                                    <ng-template pTemplate="input">
+                                        <input pInputText type="text" [(ngModel)]="rowData.vin">
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{rowData.vin}}
+                                    </ng-template>
+                 </p-cellEditor> -->
+                 
+                             <span *ngSwitchDefault>
+                                    {{rowData[col.field]}}
+                                </span> 
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage" let-columns>
+                    <tr>
+                        <td [attr.colspan]="columns.length">
+                            <div class="emptyMessage">
+                                No records found
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>

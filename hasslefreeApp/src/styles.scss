@@ -1,0 +1,74 @@
+@import '~primeng/resources/primeng.css';
+@import '~primeng/resources/themes/rhea/theme.css';
+
+// Import Fuse core library
+@import "@fuse/scss/core";
+
+// Import app.theme.scss
+@import "app/app.theme";
+
+// .mat-form-field-appearance-outline .mat-form-field-wrapper{
+//     padding-bottom:0px !important;
+// }
+// .mat-form-field-infix
+// {
+//     padding: 5px 0px !important;
+// }
+.search-wrapper {
+    width: 100%;
+    max-width: 480px;
+    border-radius: 28px;
+    overflow: hidden;
+    background:#fff;
+    @include mat-elevation(1);
+
+    @include media-breakpoint('xs') {
+        width: 100%;
+    }
+
+    .search {
+        width: 100%;
+        height: 48px;
+        line-height: 48px;
+        padding: 0 18px;
+.mat-icon{
+    color: rgba(0,0,0,.54);
+}
+        input {
+            width: 100%;
+            height: 48px;
+            min-height: 48px;
+            max-height: 48px;
+            padding: 0 16px;
+            border: none;
+            outline: none;
+            color:#3c4252 !important;
+        }
+    }
+}
+.head{
+    position: RELATIVE;
+    background: 0 0;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    /* background: #eee; */
+    font-weight: 500;
+    margin: 0 0 20px;
+    padding: 20px;
+    text-transform: uppercase;
+    span{
+        display: inline-block;
+        background: #fff;
+    }
+    &::after{
+        border-bottom: 1px solid #f0f0f0;
+        content: '';
+        left: 19px;
+        position: absolute;
+        top: 27px;
+        width: 100%;
+        z-index: 1;
+        HEIGHT: 2PX;
+    }
+}
