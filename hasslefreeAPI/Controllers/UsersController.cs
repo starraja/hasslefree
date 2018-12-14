@@ -82,6 +82,11 @@ namespace hasslefreeAPI.Controllers
         [HttpPost("VerifyEmail")]
         public async Task<object> VerifyEmail([FromBody]UserMailConfirmDto usermail)
         {
+            byte[] data = Convert.FromBase64String(usermail.UserName);
+            usermail.UserName = Encoding.UTF8.GetString(data);
+            data = Convert.FromBase64String(usermail.Token);
+            usermail.Token = Encoding.UTF8.GetString(data);
+
             ApplicationUser user = await _userManager.FindByNameAsync(usermail.UserName);
 
             IdentityResult result = await _userManager.ConfirmEmailAsync(user, usermail.Token);
