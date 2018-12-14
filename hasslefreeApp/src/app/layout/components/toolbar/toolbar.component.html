@@ -1,0 +1,179 @@
+<mat-toolbar class="p-0 mat-elevation-z1">
+
+    <div fxFlex fxFill fxLayout="row" fxLayoutAlign="start center">
+
+        <div fxFlexOffset="10px" fxFlex="1 0 auto" fxLayout="row" fxLayoutAlign="start center">
+                <button mat-icon-button [matMenuTriggerFor]="menu">
+                        <mat-icon>{{toolbarIconmenuselected?toolbarIconmenuselected.icon:'search'}}</mat-icon>
+                      </button>
+                      <mat-menu #menu="matMenu" >
+                        <button mat-menu-item *ngFor="let option of options" (click)="menuSelected(option)">
+                          <mat-icon>{{option.icon}}</mat-icon>
+                          <span>{{option.item}}</span>
+                        </button>
+                      </mat-menu>
+                      
+             <!-- <mat-form-field fxFlex="80%" floatLabel="never">
+                <input matInput placeholder="toolbarIconmenuselected?('Search by '+ toolbarIconmenuselected.item):'Search by Lead,Contact,Account,Deal,Report'" aria-label="Number"
+                  [formControl]="myControl" [matAutocomplete]="auto">
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)=selected($event)>
+                  <mat-option *ngFor="let option of options" [value]="option.item">
+                        <mat-icon>{{option.icon}}</mat-icon> {{option.item}}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field> -->
+            <!-- <button mat-icon-button class="navbar-toggle-button"
+                    *ngIf="!hiddenNavbar && !rightNavbar" (click)="toggleSidebarOpen('navbar')" fxHide.gt-md>
+                <mat-icon class="secondary-text">menu</mat-icon>
+            </button>
+
+            <div class="toolbar-separator" *ngIf="!hiddenNavbar && !rightNavbar" fxHide.gt-md></div>
+
+            <div fxLayout="row" fxLayoutAlign="start center" *ngIf="horizontalNavbar">
+                <div class="logo ml-16">
+                    <img class="logo-icon" src="assets/images/logos/fuse.svg">
+                </div>
+            </div>
+
+            <div class="px-8 px-md-16">
+                <fuse-shortcuts [navigation]="navigation"></fuse-shortcuts>
+            </div> -->
+
+        </div>
+
+        <div class="" fxFlex="0 1 auto" fxLayout="row" fxLayoutAlign="start center">
+
+            <!-- <button mat-button [matMenuTriggerFor]="userMenu"
+                    class="user-button">
+                <div fxLayout="row" fxLayoutAlign="center center">
+                    <img class="avatar mr-0 mr-sm-16" src="assets/images/avatars/Velazquez.jpg">
+                    <span class="username mr-12" fxHide fxShow.gt-sm>Charlie Adams</span>
+                    <mat-icon class="s-16" fxHide.xs>keyboard_arrow_down</mat-icon>
+                </div>
+            </button>
+
+            <mat-menu #userMenu="matMenu" [overlapTrigger]="false">
+
+                <button mat-menu-item>
+                    <mat-icon>account_circle</mat-icon>
+                    <span>My Profile</span>
+                </button>
+
+                <button mat-menu-item class="">
+                    <mat-icon>mail</mat-icon>
+                    <span>Inbox</span>
+                </button>
+
+                <button mat-menu-item class="">
+                    <mat-icon>exit_to_app</mat-icon>
+                    <span>Logout</span>
+                </button>
+
+            </mat-menu> -->
+
+            <div class="toolbar-separator"></div>
+            <button mat-icon-button class="navbar-toggle-button">
+        <mat-icon class="secondary-text">add</mat-icon>
+    </button> 
+            <!-- <fuse-search-bar (input)="search($event)"></fuse-search-bar> -->
+
+            <div class="toolbar-separator"></div>
+            <button mat-icon-button class="navbar-toggle-button">
+                    <mat-icon class="secondary-text">mail</mat-icon>
+                </button> 
+                <div class="toolbar-separator"></div>
+                <button mat-icon-button class="navbar-toggle-button">
+                        <mat-icon class="secondary-text">share</mat-icon>
+                    </button> 
+                    <div class="toolbar-separator"></div>
+                <button mat-icon-button class="navbar-toggle-button">
+                        <mat-icon class="secondary-text">notifications_none</mat-icon>
+                    </button> 
+                    <div class="toolbar-separator"></div>
+                    <button mat-icon-button class="navbar-toggle-button">
+                            <mat-icon class="secondary-text">help_outline</mat-icon>
+                        </button> 
+                    <div class="toolbar-separator"></div>
+
+                        <button mat-button [matMenuTriggerFor]="userMenu"
+                    class="user-button">
+                <div fxLayout="row" fxLayoutAlign="center center">
+                    <img class="avatar mr-0 mr-sm-16" src="assets/images/avatars/Velazquez.jpg">
+                    <!-- <span class="username mr-12" fxHide fxShow.gt-sm>Charlie Adams</span> -->
+                    <mat-icon class="s-16" fxHide.xs>keyboard_arrow_down</mat-icon>
+                </div>
+            </button>
+            <mat-menu #userMenu="matMenu" [overlapTrigger]="false">
+
+                    <button mat-menu-item>
+                        <mat-icon>account_circle</mat-icon>
+                        <span>My Profile</span>
+                    </button>
+    
+                    <button mat-menu-item class="">
+                        <mat-icon>mail</mat-icon>
+                        <span>Inbox</span>
+                    </button>
+    
+                    <button mat-menu-item class="" (click)="logout()" >
+                        <mat-icon>exit_to_app</mat-icon>
+                        <span>Logout</span>
+                    </button>
+    
+                </mat-menu>
+            <!-- <button mat-button fxHide fxShow.gt-xs
+                    class="language-button"
+                    [matMenuTriggerFor]="languageMenu">
+                <div fxLayout="row" fxLayoutAlign="center center">
+                    <img class="flag mr-8" [src]="'assets/icons/flags/'+selectedLanguage.flag+'.png'">
+                    <span class="iso text-uppercase">{{selectedLanguage.id}}</span>
+                </div>
+            </button>
+
+            <mat-menu #languageMenu="matMenu" [overlapTrigger]="false">
+
+                <button mat-menu-item *ngFor="let lang of languages" (click)="setLanguage(lang)">
+                    <span fxLayout="row" fxLayoutAlign="start center">
+                        <img class="flag mr-16" [src]="'assets/icons/flags/'+lang.flag+'.png'">
+                        <span class="iso">{{lang.title}}</span>
+                    </span>
+                </button>
+
+                <button mat-menu-item [routerLink]="'/components/multi-language'">
+                    <div fxLayout="row" fxLayoutAlign="start center">
+                        <span>Learn more</span>
+                    </div>
+                </button>
+
+            </mat-menu>
+
+            <div class="toolbar-separator" fxHide fxShow.gt-xs></div>
+
+            <button mat-icon-button fxHide.gt-md
+                    class="chat-panel-toggle-button"
+                    (click)="toggleSidebarOpen('chatPanel')"
+                    aria-label="Toggle chat panel">
+                <mat-icon class="secondary-text">chat</mat-icon>
+            </button>
+
+            <div class="toolbar-separator" fxHide.gt-md></div>
+
+            <button mat-icon-button
+                    class="quick-panel-toggle-button"
+                    (click)="toggleSidebarOpen('quickPanel')"
+                    aria-label="Toggle quick panel">
+                <mat-icon class="secondary-text">format_list_bulleted</mat-icon>
+            </button>
+
+            <div class="toolbar-separator" *ngIf="!hiddenNavbar && rightNavbar" fxHide fxShow.gt-xs></div>
+
+            <button mat-icon-button class="navbar-toggle-button"
+                    *ngIf="!hiddenNavbar && rightNavbar" (click)="toggleSidebarOpen('navbar')" fxHide.gt-md>
+                <mat-icon class="secondary-text">menu</mat-icon>
+            </button> -->
+
+        </div>
+
+    </div>
+
+</mat-toolbar>

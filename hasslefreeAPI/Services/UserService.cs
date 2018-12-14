@@ -134,7 +134,9 @@ namespace hasslefreeAPI.Services
 
                 }
 
-                body = body.Replace("{{emaillink}}", "http://localhost:4200/emailverify?username=" + username + "token=" + Token);
+                body = body.Replace("{{emaillink}}", "http://localhost:4200/auth/mail-confirm?username="
+                    + Convert.ToBase64String(Encoding.UTF8.GetBytes(username)) + 
+                    "&token=" + Convert.ToBase64String(Encoding.UTF8.GetBytes(Token)));
                 body = body.Replace("[USER NAME]", username);
 
                 MailMessage mailMessage = new MailMessage();
