@@ -5,7 +5,7 @@ import { takeUntil } from 'rxjs/internal/operators';
 
 import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
-import {LoginService,createUserDto} from '../../shared/shared';
+import {UserService,CreateUserDto} from '../../shared/shared';
 @Component({
     selector     : 'register',
     templateUrl  : './register.component.html',
@@ -16,14 +16,14 @@ import {LoginService,createUserDto} from '../../shared/shared';
 export class RegisterComponent implements OnInit, OnDestroy
 {
     registerForm: FormGroup;
-    user:createUserDto=new createUserDto();
+    user:CreateUserDto=new CreateUserDto();
     // Private
     private _unsubscribeAll: Subject<any>;
 
     constructor(
         private _fuseConfigService: FuseConfigService,
         private _formBuilder: FormBuilder,
-        private userService:LoginService
+        private userService:UserService
     )
     {
         // Configure the layout
@@ -73,9 +73,9 @@ export class RegisterComponent implements OnInit, OnDestroy
             });
     }
     register(){
-        this.user.Email=this.registerForm.controls["email"].value;
-        this.user.Password=this.registerForm.controls["password"].value;
-        this.user.LoginName=this.registerForm.controls["name"].value;
+        this.user.email=this.registerForm.controls["email"].value;
+        this.user.password=this.registerForm.controls["password"].value;
+        this.user.loginName=this.registerForm.controls["name"].value;
         this.userService.createUser(this.user).subscribe(res=>{
             if(res.token!=null){
                 alert('user created');

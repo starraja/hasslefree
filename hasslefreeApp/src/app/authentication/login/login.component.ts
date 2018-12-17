@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
 
-import { LoginService } from '../../shared/shared';
+import { UserService,CreateUserDto } from '../../shared/shared';
 
 @Component({
     selector: 'login',
@@ -23,11 +23,12 @@ export class LoginComponent implements OnInit {
      * @param {FuseConfigService} _fuseConfigService
      * @param {FormBuilder} _formBuilder
      */
+    user:CreateUserDto=new CreateUserDto();
     constructor(
         private _fuseConfigService: FuseConfigService,
         private _formBuilder: FormBuilder,
         private router: Router,
-        private loginService: LoginService
+        private userService: UserService
     ) {
         // Configure the layout
         this._fuseConfigService.config = {
@@ -62,8 +63,9 @@ export class LoginComponent implements OnInit {
         });
     }
     login() {
-
-        this.loginService.login(this.loginForm.controls["username"].value, this.loginForm.controls["password"].value).
+       this.user.loginName= this.loginForm.controls["username"].value;
+       this.user.password= this.loginForm.controls["password"].value;
+        this.userService.login(this.user).
             subscribe(res => {
                 if (res.token != null) {
                     this.router.navigateByUrl('apps/hasslefree/lead');

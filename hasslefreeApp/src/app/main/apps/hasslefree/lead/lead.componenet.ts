@@ -3,11 +3,12 @@ import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { fuseAnimations } from '@fuse/animations';
 import { HassleService } from '../hasslefree.service';
 import { takeUntil } from 'rxjs/internal/operators';
-
+import {SelectItem} from 'primeng/api';
+import {MatAutocompleteSelectedEvent, MatChipInputEvent, MatAutocomplete} from '@angular/material';
 @Component({
     selector: 'lead',
     templateUrl: './lead.component.html',
@@ -22,24 +23,118 @@ export class LeadComponent implements OnInit {
     fieldfilter: any[];
     searchFields: any[];
     isLinear = false;
-    firstFormGroup: FormGroup;
-    secondFormGroup: FormGroup;
+    basicInfoFormGroup: FormGroup;
+    phoneNumbersFormGroup: FormGroup;
+    locationFormGroup: FormGroup;
+    companyInfoFormGroup: FormGroup;
+    contactInfoFormGroup: FormGroup;
+    productInfoFormGroup: FormGroup;
+    sourceInfoFormGroup: FormGroup;
     @ViewChild("Firstname") nameField: ElementRef;
     @ViewChild("Leadstage") leadStage: ElementRef;
     @ViewChild('myForm') form: NgForm;
     filteredOptions: Observable<string[]>;
     myControl = new FormControl();
+    visible = true;
+  selectable = true;
+  removable = true;
+  addOnBlur = true;
+  separatorKeysCodes: number[] = [ENTER, COMMA];
+  fruitCtrl = new FormControl();
+  filteredFruits: Observable<string[]>;
+  fruits: string[] = ['option'];
+  allFruits: string[] = ['Option1', 'Option1', 'Option1', 'Option1', 'Option1'];
+
+  @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto') matAutocomplete: MatAutocomplete;
+
+
     constructor(private hasslefree: HassleService, private _formBuilder: FormBuilder, private eRef: ElementRef) {
+        this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
+            startWith(null),
+            map((fruit: string | null) => fruit ? this._filter1(fruit) : this.allFruits.slice()));
+     
     }
     addComp: boolean;
+    leadQuality: SelectItem[];
+    selecteditem:any;
     ngOnInit() {
 
-        this.firstFormGroup = new FormGroup({
-            firstName: new FormControl(),
-            lastName: new FormControl(),
-            ownerCtrl: new FormControl(),
+        this.basicInfoFormGroup = this._formBuilder.group({
+            Salutation:  [''],
+            firstName:  [''],
+            lastName:  [''],
+            OwnerCtrl:  [''],
+            leadDate: [''],
+            email: [''],
+            leadStage:  ['']
         });
-        console.log(this.firstFormGroup.controls);
+        this.phoneNumbersFormGroup = this._formBuilder.group({
+            workPhone:  [''],
+            mobilePhone:  ['']
+        });
+        this.locationFormGroup = this._formBuilder.group({
+            address1:  [''],
+            address2:  [''],
+            address3:  [''],
+            city:  [''],
+            state:  [''],
+            country:  [''],
+            postalCode:  [''],
+        });
+        this.companyInfoFormGroup = this._formBuilder.group({
+            companyName:[''],
+            companyAddress1:  [''],
+            companyAddress2:  [''],
+            companyAddress3:  [''],
+            companyCity:  [''],
+            companyState:  [''],
+            companyCountry:  [''],
+            companyPostalCode:  [''],
+            companyWebsite:  [''],
+            companyTurnover:  [''],
+            companyPhone:  [''],
+            companyIndustryType:  [''],
+            companyIndustrySubType:  ['']
+        });
+        this.contactInfoFormGroup = this._formBuilder.group({
+            contactSalutation:  [''],
+            contactFirstName:  [''],
+            contactLastName:  [''],
+            contactEmail: [''],
+            contactType:  [''],
+            contactWorkPhone:  [''],
+            contactMobilePhone:  [''],
+            contactGender:[''],
+            contactDepartment:[''],
+            contactAuthority:[''],
+            contactDesignation:['']
+        });
+        this.productInfoFormGroup=this._formBuilder.group({
+            productName:[''],
+            productQuantity:[''],
+            productUOM:[''],
+            productRate:[''],
+            productAmount:[''],
+        });
+        this.sourceInfoFormGroup=this._formBuilder.group({
+            leadSource:[''],
+            sourceDescription:[''],
+            sourceCompetitorInfo:[''],
+            sourceCompetitorName:[''],
+            sourceCompetitorAmount:[''],
+            sourceRemarks:[''],
+
+        });
+        // console.log(this.firstFormGroup.controls);
+
+
+        this.leadQuality = [
+            {label:'Cold(0-30)', value:{id:1, name: 'Cold(0-30)'}},
+            {label:'Warm(31-70)', value:{id:2, name: 'Warm(31-70)'}},
+            {label:'Hot(71-99)', value:{id:3, name: 'Hot(71-99)'}},
+        ];
+
         this.searchFields = [
             { value: 'Last name' },
             { value: 'First name' },
@@ -181,7 +276,49 @@ export class LeadComponent implements OnInit {
 
         return this.searchFields.filter(option => option.value.toLowerCase().includes(filterValue));
     }
-    selected(event) {
+
+    add(event: MatChipInputEvent): void {
+        // Add fruit only when MatAutocomplete is not open
+        // To make sure this does not conflict with OptionSelected Event
+        if (!this.matAutocomplete.isOpen) {
+          const input = event.input;
+          const value = event.value;
+    
+          // Add our fruit
+          if ((value || '').trim()) {
+            this.fruits.push(value.trim());
+          }
+    
+          // Reset the input value
+          if (input) {
+            input.value = '';
+          }
+    
+          this.fruitCtrl.setValue(null);
+        }
+      }
+    
+      remove(fruit: string): void {
+        const index = this.fruits.indexOf(fruit);
+    
+        if (index >= 0) {
+          this.fruits.splice(index, 1);
+        }
+      }
+    
+      selected(event: MatAutocompleteSelectedEvent): void {
+        this.fruits.push(event.option.viewValue);
+        this.fruitInput.nativeElement.value = '';
+        this.fruitCtrl.setValue(null);
+      }
+    
+      private _filter1(value: string): string[] {
+        const filterValue = value.toLowerCase();
+    
+        return this.allFruits.filter(fruit => fruit.toLowerCase().indexOf(filterValue) === 0);
+      }
+
+    selected1(event) {
         let id = event.option.value;
         if (id) {
             this.eRef.nativeElement.ownerDocument.getElementById(id).focus();
@@ -243,8 +380,15 @@ export class LeadComponent implements OnInit {
             }
         ];
     }
-    get f() {
-        return this.firstFormGroup.controls;
+    // get f() {
+    //     return this.firstFormGroup.controls;
+    // }
+    removeClick(item:any){
+        this.selecteditem.array.forEach(element => {
+           if(element=item){
+this.selecteditem=null;
+           }
+        });
     }
 
 }

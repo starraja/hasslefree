@@ -1,11 +1,13 @@
 @import "src/@fuse/scss/fuse";
 
 login {
-
+width: 100%;
+height: 100%;
     #login {
         width: 100%;
         background:#485965;
         background-size: cover;
+        height: 100%;
 
         #login-form-wrapper {
             flex: 1 0 auto;

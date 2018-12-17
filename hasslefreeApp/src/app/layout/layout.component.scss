@@ -60,3 +60,58 @@ vertical-layout-1 {
         }
     }
 }
+.logo-icon {
+    width: 50px;
+    height: 50px;
+}
+.filter{
+    border:1px solid #dad7d7;
+     .filter-field{
+         background: whitesmoke;
+         padding: 0px 10px 0px;
+         box-shadow: -1px 2px 3px #d6d6d6;
+     }
+     .label{
+        padding: 6px 10px;
+        font-size: 18px;
+        font-weight: 400;
+    
+     }
+ }
+ p-chips {
+    margin: 13px 2px;
+    .ui-inputtext{
+        background-color: #fff;
+        border: 0px;
+        border-bottom: 1px solid #757272;
+        border-radius: 0px;
+    }
+}
+p-multiselect{
+    margin: 13px 2px;
+    width:100%;
+    .ui-multiselect{
+        background-color: #fff;
+        border: 0px;
+        border-bottom: 1px solid #757272;
+        border-radius: 0px;
+        width:100%;
+        .ui-multiselect-trigger{
+            background:#fff;
+        }
+     .ui-multiselect-item.ui-state-highlight{
+background-color:#fff;
+color:auto;
+        }
+    }
+}
+.example-chip-list{
+    margin:0px 6px;
+    .mat-chip-list-wrapper{
+        .mat-chip{
+            padding: 8px;
+            min-height: 19px !important;
+            font-size: 12px;
+        }
+    }
+}

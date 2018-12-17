@@ -9,7 +9,7 @@ const routes: Routes = [
     {
         path: 'hasslefree/lead',
         loadChildren: './hasslefree/hasslefree.module#HasslefreeModule',
-        canActivate:[AuthGuard]
+        // canActivate:[AuthGuard]
    }
 ];
 

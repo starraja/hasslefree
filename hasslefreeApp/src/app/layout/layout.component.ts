@@ -6,7 +6,7 @@ import { FuseConfigService } from '@fuse/services/config.service';
 import { navigation } from 'app/navigation/navigation';
 
 @Component({
-    selector     : 'layout',
+    selector     : 'vertical-layout-1',
     templateUrl  : './layout.component.html',
     styleUrls    : ['./layout.component.scss'],
     encapsulation: ViewEncapsulation.None
