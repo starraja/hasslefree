@@ -1,7 +1,7 @@
 /// <reference path="prime.module.ts" />
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
@@ -37,7 +37,8 @@ import {
     RegisterComponent, ResetPasswordComponent
 } from './authentication/authentication';
 // import { LayoutModule } from 'app/layout/layout.module';
-import { AuthGuard } from './shared/shared';
+import { AuthGuard,
+    AuthInterceptor,API_BASE_URL } from './shared/shared';
 const appRoutes: Routes = [
     {
         path: 'auth/login',
@@ -129,7 +130,9 @@ const appRoutes: Routes = [
 
         AppStoreModule
     ],
-    providers: [AuthGuard, FuseConfigService],
+    providers: [AuthGuard, FuseConfigService,
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+        {provide: API_BASE_URL, useValue:"http://localhost:55093"}],
     bootstrap: [
         AppComponent
     ]

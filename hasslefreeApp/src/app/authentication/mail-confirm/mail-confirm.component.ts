@@ -3,7 +3,7 @@ import { ActivatedRoute  } from '@angular/router';
 
 import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
-import {LoginService,usermailconfirmDto} from '../../shared/shared';
+import {UserService,UserMailConfirmDto} from '../../shared/shared';
 @Component({
     selector     : 'mail-confirm',
     templateUrl  : './mail-confirm.component.html',
@@ -13,7 +13,7 @@ import {LoginService,usermailconfirmDto} from '../../shared/shared';
 })
 export class MailConfirmComponent implements OnInit
 {
-    mailconfirm:usermailconfirmDto=new usermailconfirmDto();
+    mailconfirm:UserMailConfirmDto=new UserMailConfirmDto();
    
  
     /**
@@ -24,7 +24,7 @@ export class MailConfirmComponent implements OnInit
     constructor(
         private _fuseConfigService: FuseConfigService,
         private route:ActivatedRoute ,
-        private loginService:LoginService   
+        private userService:UserService   
     )
     {
         
@@ -49,7 +49,7 @@ export class MailConfirmComponent implements OnInit
     ngOnInit(): void {
         this.mailconfirm.token=this.route.snapshot.queryParamMap.get("token");
         this.mailconfirm.userName=this.route.snapshot.queryParamMap.get("username");
-        this.loginService.usermailconfirm(this.mailconfirm).subscribe(res=>{
+        this.userService.verifyEmail(this.mailconfirm).subscribe(res=>{
         });
     }
 }

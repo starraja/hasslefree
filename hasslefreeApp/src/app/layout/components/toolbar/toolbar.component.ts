@@ -9,7 +9,7 @@ import { FuseConfigService } from '@fuse/services/config.service';
 import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 
 import { navigation } from 'app/navigation/navigation';
-import {LoginService} from '../../../shared/shared';
+import {UserService } from '../../../shared/shared';
 @Component({
     selector     : 'toolbar',
     templateUrl  : './toolbar.component.html',
@@ -63,7 +63,7 @@ export class ToolbarComponent implements OnInit, OnDestroy
         private _fuseConfigService: FuseConfigService,
         private _fuseSidebarService: FuseSidebarService,
         private _translateService: TranslateService,
-        private _loginService: LoginService,
+        private _userService: UserService,
         private _router: Router
     )
     {
@@ -186,7 +186,7 @@ export class ToolbarComponent implements OnInit, OnDestroy
         this._translateService.use(lang.id);
     }
     logout(){
-        this._loginService.logout();
+        this._userService.logout();
         this._router.navigateByUrl('pages/auth/login');
     }
 }
