@@ -191,7 +191,7 @@ namespace hasslefreeAPI
 
        
             app.UseAuthentication();
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseMvc();
             // _emailSender.SendEmailAsync(new SendEmailDetails
             //{
