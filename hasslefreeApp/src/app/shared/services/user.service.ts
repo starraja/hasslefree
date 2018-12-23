@@ -73,6 +73,7 @@ export class UserService {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = resultData200 ? UserDto.fromJS(resultData200) : new UserDto();
+            
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -193,6 +194,6 @@ export class UserService {
         return _observableOf<void>(<any>null);
     }
     logout() {
-        localStorage.removeItem('currentUser');
+        localStorage.removeItem('userToken');
     }
 }

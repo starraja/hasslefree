@@ -22,6 +22,14 @@ namespace hasslefreeAPI.AutoMapper
             CreateMap<Activities, ActivitiesDto>();
             CreateMap<NotesDto, Notes>();
             CreateMap<Notes, NotesDto>();
+            CreateMap<ContactsDto, Contacts>();
+            CreateMap<Contacts, ContactsDto>();
+            CreateMap<ProductListDto, ProductList>();
+            CreateMap<ProductList, ProductListDto>();
+            //CreateMap<LeadDto, ProductList>()
+            //    .ForMember(productlist => productlist, lead => lead.MapFrom(q => q.ProductList));
+            //CreateMap<ProductList, LeadDto>()
+            //   .ForMember( lead => lead.MapFrom(q => q.ProductList), productlist => productlist);
         }
     }
 }
