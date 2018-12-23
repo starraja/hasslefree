@@ -49,5 +49,7 @@ namespace hasslefreeAPI.Models
         public int ModifiedBy { get; set; }
         public DateTime ModifiedDateTime { get; set; }
         //public Accounts Account { get; set; }
+        public List<ProductListDto> ProductList { get; set; }
+        public List<ActivitiesDto> Activities { get; set; }
     }
 }
