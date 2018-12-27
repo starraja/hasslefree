@@ -6,7 +6,7 @@ export const navigation: FuseNavigation[] = [
         title: 'lead',
         type: 'item',
         icon: 'account_circle',
-        url: '/apps/hasslefree/lead'
+        url: '/apps/lead'
     },
     {
         id: 'contact',
@@ -41,7 +41,7 @@ export const navigation: FuseNavigation[] = [
         title: 'Appoinment',
         type: 'item',
         icon: 'date_range',
-        url: ' '
+        url: '/apps/appointment'
     },
     {
         id: 'reports',

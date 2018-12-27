@@ -1,0 +1,137 @@
+:host {
+    
+    .page-layout{
+        .appointment-heading{
+            text-transform: uppercase;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+
+            span{
+                margin-left: 15px;
+                margin-right: 15px;
+                color: #333;
+                font-size: 15px;
+            }
+
+            .center{
+
+                .filter-field{
+                    mat-form-field{
+                        width: 100%;
+                    }
+                }
+
+            }
+        }
+    }
+}
+.product-row{
+ display: block !important;
+ float: left;
+ padding: 0 10px;	
+}
+.btn{
+ float: left;
+ width: 100%;	
+}
+.addlead-btn{
+ margin-top: 5px;
+}
+.form-control-feedback{
+ position: absolute;
+ top: 37px;
+}
+.form-control-feedback p{
+ color: #f00;
+ margin: 0;
+ font-size: 12px;
+}
+.appointment-section .center{
+ margin: 0 auto;
+ width: 800px !important;
+}
+mat-slide-toggle{
+ margin-left: 50px;
+}
+.datepicker-field mat-form-field{
+ width: 100%;
+}
+.padding-left{
+ padding-left: 10px;
+}
+.padding-right{
+ padding-right: 10px;
+}
+.filter-field mat-form-field{
+ width: 100%;
+}
+textarea{
+ height: 100px;
+}
+.page-layout{
+ padding-bottom: 40px;
+}
+.submit-btn{
+ background-color: #039be5 !important;
+ color: #fff !important;
+}
+.btn-field{
+ text-align: center !important;
+ display: block !important;
+}
+.cancel-btn{
+ margin-right: 9px;
+ border: 1px solid #ddd;
+}
+.filter-field{
+ position: relative;
+}
+.mat-dialog-content{
+  margin: 0 !important;
+  padding: 0 !important;
+  max-height: 100% !important;
+  width: 100%;
+}
+.close-btn{
+  border: none;
+  background-color: transparent;
+  position: absolute;
+  right: 0;
+  top: 10px;
+  cursor: pointer;
+}
+.filter-field{
+  position: relative;
+}
+.appointment-heading-h2{
+  text-transform: uppercase;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.appointment-heading-h2 span{
+  margin-left: 15px;
+  margin-right: 15px;
+  color: #333;
+  font-size: 15px;
+}
+.listing-product-information{
+ float: left;
+ width: 100%;	
+}
+.mat-table{
+ width: 100%;
+ margin-bottom: 20px;	
+}
+.fa-pencil-square-o{
+ margin-right: 5px;	
+}
+.listing-product-information a{
+ color: #333 !important;
+}
+.add-activity{
+ float: right !important;
+ margin-bottom: 20px;
+ margin-top: 20px;	
+}

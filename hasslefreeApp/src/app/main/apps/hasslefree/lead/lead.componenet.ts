@@ -1,17 +1,19 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { NgForm } from '@angular/forms';
+import { NgForm,FormControl } from '@angular/forms';
+import {Router  } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { fuseAnimations } from '@fuse/animations';
-import { HassleService } from '../hasslefree.service';
-import { takeUntil } from 'rxjs/internal/operators';
 import {SelectItem} from 'primeng/api';
 import {MatAutocompleteSelectedEvent, MatChipInputEvent, MatAutocomplete} from '@angular/material';
+import { MatDialog } from '@angular/material';
+import {LeadDto,LeadService} from '../../../../shared/shared';
+
 @Component({
     selector: 'lead',
     templateUrl: './lead.component.html',
+    styleUrls: ['./lead.component.scss'],
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations
 })
@@ -23,13 +25,7 @@ export class LeadComponent implements OnInit {
     fieldfilter: any[];
     searchFields: any[];
     isLinear = false;
-    basicInfoFormGroup: FormGroup;
-    phoneNumbersFormGroup: FormGroup;
-    locationFormGroup: FormGroup;
-    companyInfoFormGroup: FormGroup;
-    contactInfoFormGroup: FormGroup;
-    productInfoFormGroup: FormGroup;
-    sourceInfoFormGroup: FormGroup;
+    lead:LeadDto[]=[];
     @ViewChild("Firstname") nameField: ElementRef;
     @ViewChild("Leadstage") leadStage: ElementRef;
     @ViewChild('myForm') form: NgForm;
@@ -44,12 +40,16 @@ export class LeadComponent implements OnInit {
   filteredFruits: Observable<string[]>;
   fruits: string[] = ['option'];
   allFruits: string[] = ['Option1', 'Option1', 'Option1', 'Option1', 'Option1'];
+  displayedColumns: string[] = ['product', 'quantity', 'rate', 'amount', 'activity'];
+  displayedActivityColumns: string[] = ['title', 'location', 'status', 'related', 'owner', 'activity'];
+ selectedLead:LeadDto;
 
   @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
 
-    constructor(private hasslefree: HassleService, private _formBuilder: FormBuilder, private eRef: ElementRef) {
+    constructor(private route:Router, private eRef: ElementRef, public dialog: MatDialog,
+        private leadService:LeadService) {
         this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
             startWith(null),
             map((fruit: string | null) => fruit ? this._filter1(fruit) : this.allFruits.slice()));
@@ -60,72 +60,6 @@ export class LeadComponent implements OnInit {
     selecteditem:any;
     ngOnInit() {
 
-        this.basicInfoFormGroup = this._formBuilder.group({
-            Salutation:  [''],
-            firstName:  [''],
-            lastName:  [''],
-            OwnerCtrl:  [''],
-            leadDate: [''],
-            email: [''],
-            leadStage:  ['']
-        });
-        this.phoneNumbersFormGroup = this._formBuilder.group({
-            workPhone:  [''],
-            mobilePhone:  ['']
-        });
-        this.locationFormGroup = this._formBuilder.group({
-            address1:  [''],
-            address2:  [''],
-            address3:  [''],
-            city:  [''],
-            state:  [''],
-            country:  [''],
-            postalCode:  [''],
-        });
-        this.companyInfoFormGroup = this._formBuilder.group({
-            companyName:[''],
-            companyAddress1:  [''],
-            companyAddress2:  [''],
-            companyAddress3:  [''],
-            companyCity:  [''],
-            companyState:  [''],
-            companyCountry:  [''],
-            companyPostalCode:  [''],
-            companyWebsite:  [''],
-            companyTurnover:  [''],
-            companyPhone:  [''],
-            companyIndustryType:  [''],
-            companyIndustrySubType:  ['']
-        });
-        this.contactInfoFormGroup = this._formBuilder.group({
-            contactSalutation:  [''],
-            contactFirstName:  [''],
-            contactLastName:  [''],
-            contactEmail: [''],
-            contactType:  [''],
-            contactWorkPhone:  [''],
-            contactMobilePhone:  [''],
-            contactGender:[''],
-            contactDepartment:[''],
-            contactAuthority:[''],
-            contactDesignation:['']
-        });
-        this.productInfoFormGroup=this._formBuilder.group({
-            productName:[''],
-            productQuantity:[''],
-            productUOM:[''],
-            productRate:[''],
-            productAmount:[''],
-        });
-        this.sourceInfoFormGroup=this._formBuilder.group({
-            leadSource:[''],
-            sourceDescription:[''],
-            sourceCompetitorInfo:[''],
-            sourceCompetitorName:[''],
-            sourceCompetitorAmount:[''],
-            sourceRemarks:[''],
-
-        });
         // console.log(this.firstFormGroup.controls);
 
 
@@ -254,14 +188,14 @@ export class LeadComponent implements OnInit {
             { id: '51', value: 'Events' }
         ];
         this.cols = [
-            { field: 'id', header: '' },
+            { field: 'leadId', header: '' },
             { field: 'nameDetails', header: 'NAME' },
-            { field: 'score', header: 'LEAD SCORE' },
-            { field: 'stage', header: 'LEAD STAGE' },
+            { field: '', header: 'LEAD SCORE' },
+            { field: 'salesStage', header: 'LEAD STAGE' },
             { field: 'lastContact', header: 'LAST CONTACT' },
-            { field: 'owner', header: 'OWNER' },
+            { field: 'leadOwnerExecutiveId', header: 'OWNER' },
             { field: 'email', header: 'EMAIL' },
-            { field: 'work', header: 'WORK' }
+            { field: 'workPhone', header: 'WORK' }
 
         ];
         this.getLeads();
@@ -335,6 +269,9 @@ export class LeadComponent implements OnInit {
         // }
     }
     getLeads() {
+        this.leadService.getLeads().subscribe(res=>{
+            this.lead=res;
+        })
         this.leads = [
             {
                 id: '1',
@@ -380,17 +317,23 @@ export class LeadComponent implements OnInit {
             }
         ];
     }
+    onRowSelect(event) {
+        this.route.navigate(['apps/addlead',this.selectedLead.leadId]);
+    }
     // get f() {
     //     return this.firstFormGroup.controls;
     // }
     removeClick(item:any){
-        this.selecteditem.array.forEach(element => {
+        this.selecteditem.array.forEach(() => {
            if(element=item){
 this.selecteditem=null;
            }
         });
     }
+addLead(){
+    this.route.navigate(['apps/addlead']);
+}
+  
 
 }
-
 

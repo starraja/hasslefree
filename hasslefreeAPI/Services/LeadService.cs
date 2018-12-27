@@ -21,61 +21,6 @@ namespace hasslefreeAPI.Services
         public IEnumerable<LeadDto> GetAllUsers()
         {
             var leadList = (from p in _context.Leads
-                       select new LeadDto
-                       {
-                           LeadId = p.LeadId,
-                           Description = p.Description,
-                           Salutation = p.Salutation,
-                           LeadFirstName = p.LeadFirstName,
-                           LeadLastName = p.LeadLastName,
-                           LeadDate = p.LeadDate,
-                           Email = p.Email,
-                           SalesStage = p.SalesStage,
-                           LeadOwnerExecutiveId = p.LeadOwnerExecutiveId,
-                           WorkPhone = p.WorkPhone,
-                           MobilePhone = p.MobilePhone,
-                           AddressLine1 = p.AddressLine1,
-                           AddressLine2 = p.AddressLine2,
-                           AddressLine3 = p.AddressLine3,
-                           City = p.City,
-                           State = p.State,
-                           PostalCode = p.PostalCode,
-                           Country = p.Country,
-                           CompanyName = p.CompanyName,
-                           CompanyAddressLine1 = p.CompanyAddressLine1,
-                           CompanyAddressLine2 = p.CompanyAddressLine2,
-                           CompanyAddressLine3 = p.CompanyAddressLine3,
-                           CompanyCity = p.CompanyCity,
-                           CompanyState = p.CompanyState,
-                           CompanyPostalCode = p.CompanyPostalCode,
-                           CompanyCountry = p.CompanyCountry,
-                           CompanyWebsite = p.CompanyWebsite,
-                           CompanyTurnover = p.CompanyTurnover,
-                           IndustryId = p.IndustryId,
-                           IndustrySubTypeId = p.IndustrySubTypeId,
-                           LeadSource = p.LeadSource,
-                           DetailDescription = p.DetailDescription,
-                           ContactId = p.ContactId,
-                           OpportunityId = p.OpportunityId,
-                           AccountId = p.AccountId,
-                           Converted = p.Converted,
-                           ProductList = _mapper.Map<ProductListDto[]>((from q in _context.ProductList
-                                                                        where q.ReferenceId == p.LeadId
-                                                                        select q
-                                   )).ToList(),
-                           Activities= _mapper.Map<ActivitiesDto[]>((from q in _context.Activities
-                                                                      where q.ReferenceId == p.LeadId
-                                                                      select q
-                                   )).ToList()
-                       }).ToList();
-
-            //return _mapper.Map<LeadDto[]>(_context.Leads.ToArray().Where(x => x.FlagActive == true));
-            return leadList;
-        }
-
-        public LeadDto GetLeadById(int leadId)
-        {
-            var lead = (from p in _context.Leads where p.LeadId == leadId
                             select new LeadDto
                             {
                                 LeadId = p.LeadId,
@@ -122,7 +67,64 @@ namespace hasslefreeAPI.Services
                                                                            where q.ReferenceId == p.LeadId
                                                                            select q
                                         )).ToList()
-                            }).SingleOrDefault();
+                            }).ToList();
+
+            //return _mapper.Map<LeadDto[]>(_context.Leads.ToArray().Where(x => x.FlagActive == true));
+            return leadList;
+        }
+
+        public LeadDto GetLeadById(int leadId)
+        {
+            var lead = (from p in _context.Leads
+                        where p.LeadId == leadId
+                        select new LeadDto
+                        {
+                            LeadId = p.LeadId,
+                            Description = p.Description,
+                            Salutation = p.Salutation,
+                            LeadFirstName = p.LeadFirstName,
+                            LeadLastName = p.LeadLastName,
+                            LeadDate = p.LeadDate,
+                            Email = p.Email,
+                            SalesStage = p.SalesStage,
+                            LeadOwnerExecutiveId = p.LeadOwnerExecutiveId,
+                            WorkPhone = p.WorkPhone,
+                            MobilePhone = p.MobilePhone,
+                            AddressLine1 = p.AddressLine1,
+                            AddressLine2 = p.AddressLine2,
+                            AddressLine3 = p.AddressLine3,
+                            City = p.City,
+                            State = p.State,
+                            PostalCode = p.PostalCode,
+                            Country = p.Country,
+                            CompanyName = p.CompanyName,
+                            CompanyAddressLine1 = p.CompanyAddressLine1,
+                            CompanyAddressLine2 = p.CompanyAddressLine2,
+                            CompanyAddressLine3 = p.CompanyAddressLine3,
+                            CompanyCity = p.CompanyCity,
+                            CompanyState = p.CompanyState,
+                            CompanyPostalCode = p.CompanyPostalCode,
+                            CompanyCountry = p.CompanyCountry,
+                            CompanyWebsite = p.CompanyWebsite,
+                            CompanyTurnover = p.CompanyTurnover,
+                            IndustryId = p.IndustryId,
+                            IndustrySubTypeId = p.IndustrySubTypeId,
+                            LeadSource = p.LeadSource,
+                            DetailDescription = p.DetailDescription,
+                            ContactId = p.ContactId,
+                            OpportunityId = p.OpportunityId,
+                            AccountId = p.AccountId,
+                            Converted = p.Converted,
+                            Contact=_mapper.Map<ContactsDto>( _context.Contacts.SingleOrDefault(s=>s.ContactId==p.ContactId)),
+                            ProductList = _mapper.Map<ProductListDto[]>((from q in _context.ProductList
+                                                                         where q.ReferenceId == p.LeadId
+                                                                         select q
+                                    )).ToList(),
+                            Activities = _mapper.Map<ActivitiesDto[]>((from q in _context.Activities
+                                                                       where q.ReferenceId == p.LeadId
+                                                                       select q
+                                    )).ToList()
+                        }).SingleOrDefault();
             return lead;
             //return _mapper.Map<LeadDto>(_context.Leads.x
             //   SingleOrDefault(x => x.LeadId == leadId && x.FlagActive == true));
@@ -134,35 +136,51 @@ namespace hasslefreeAPI.Services
             {
                 try
                 {
-                    Leads objLeads = _mapper.Map<Leads>(objLeadDto);
-                    objLeads.CreatedDateTime = DateTime.Now;
-                    objLeads.CreatedBy = 1;
-                    _context.Leads.Add(objLeads);
+                    Contacts objContact = _mapper.Map<Contacts>(objLeadDto.Contact);
+                    objContact.AccountId = null;
+                    objContact.CreatedDateTime = DateTime.Now;
+                    objContact.ModifiedDateTime = DateTime.Now;
+                    objContact.CreatedBy = 1;
+                    _context.Contacts.Add(objContact);
                     _context.SaveChanges();
 
-                    foreach (var product in objLeadDto.ProductList)
+                    Leads objLeads = _mapper.Map<Leads>(objLeadDto);
+                    objLeads.AccountId = null;
+                    objLeads.CreatedDateTime = DateTime.Now;
+                    objLeads.ModifiedDateTime = DateTime.Now;
+                    objLeads.CreatedBy = 1;
+                    objLeads.ContactId = objContact.ContactId;
+                    _context.Leads.Add(objLeads);
+                    _context.SaveChanges();
+                    if (objLeadDto.ProductList.Count > 0)
                     {
-                        ProductListDto objProductListDto = product;
-                        ProductList objProductList = _mapper.Map<ProductList>(objProductListDto);
-                        objProductList.ReferenceId = objLeads.LeadId;
-                        objProductList.Source = 1;
-                        objProductList.ProductId = product.ProductId;
-                        objProductList.CreatedBy = 1;
-                        objProductList.CreatedDateTime = DateTime.Now;
-                        _context.ProductList.Add(objProductList);
+                        foreach (var product in objLeadDto.ProductList)
+                        {
+                            ProductListDto objProductListDto = product;
+                            ProductList objProductList = _mapper.Map<ProductList>(objProductListDto);
+                            objProductList.ReferenceId = objLeads.LeadId;
+                            objProductList.Source = 1;
+                            objProductList.ProductId = product.ProductId;
+                            objProductList.CreatedBy = 1;
+                            objProductList.CreatedDateTime = DateTime.Now;
+                            objProductList.ModifiedDateTime = DateTime.Now;
+                            _context.ProductList.Add(objProductList);
+                        }
                     }
-
-                    foreach (var activity in objLeadDto.Activities)
+                    if (objLeadDto.Activities.Count > 0)
                     {
-                        ActivitiesDto objActivitiesDto = activity;
-                        Activities objActivities = _mapper.Map<Activities>(objActivitiesDto);
-                        objActivities.ReferenceId = objLeads.LeadId;
-                        objActivities.Source = 1;
-                        objActivities.CreatedBy = 1;
-                        objActivities.CreatedDateTime = DateTime.Now;
-                        _context.Activities.Add(objActivities);
+                        foreach (var activity in objLeadDto.Activities)
+                        {
+                            ActivitiesDto objActivitiesDto = activity;
+                            Activities objActivities = _mapper.Map<Activities>(objActivitiesDto);
+                            objActivities.ReferenceId = objLeads.LeadId;
+                            objActivities.Source = 1;
+                            objActivities.CreatedBy = 1;
+                            objActivities.CreatedDateTime = DateTime.Now;
+                            objActivities.ModifiedDateTime = DateTime.Now;
+                            _context.Activities.Add(objActivities);
+                        }
                     }
-
                     _context.SaveChanges();
                     transaction.Commit();
                     return _mapper.Map<LeadDto>(_context.Leads.
@@ -173,7 +191,7 @@ namespace hasslefreeAPI.Services
                     transaction.Rollback();
                     throw;
                 }
-                
+
             }
         }
 
@@ -183,6 +201,13 @@ namespace hasslefreeAPI.Services
             {
                 try
                 {
+                    Contacts objContact = _mapper.Map<Contacts>(objLeadDto.Contact);
+                    Contacts objContactsData = _context.Contacts.Find(objLeadDto.Contact.ContactId);
+                    objContact.ModifiedDateTime = DateTime.Now;
+                    objContact.ModifiedBy = 1;
+                    _context.Contacts.Add(objContact);
+                    _context.SaveChanges();
+
                     Leads objLeads = _mapper.Map<Leads>(objLeadDto);
                     Leads objLeadsData = _context.Leads.Find(objLeadDto.LeadId);
                     objLeads.ModifiedDateTime = DateTime.Now;
@@ -261,7 +286,7 @@ namespace hasslefreeAPI.Services
             objLeads.FlagActive = false;
             _context.Entry(objLeads).CurrentValues.SetValues(objLeads);
 
-            var objProductList = _context.ProductList.Where(pl => pl.ReferenceId==leadId).ToList();
+            var objProductList = _context.ProductList.Where(pl => pl.ReferenceId == leadId).ToList();
             objProductList.ForEach(pl => pl.FlagActive = false);
 
             var objActivities = _context.Activities.Where(x => x.ReferenceId == leadId).ToList();

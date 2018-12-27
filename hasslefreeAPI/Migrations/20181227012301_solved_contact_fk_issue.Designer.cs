@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using hasslefreeAPI.Entities;
 
 namespace hasslefreeAPI.Migrations
 {
     [DbContext(typeof(HassleFreeContext))]
-    partial class HassleFreeContextModelSnapshot : ModelSnapshot
+    [Migration("20181227012301_solved_contact_fk_issue")]
+    partial class solved_contact_fk_issue
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

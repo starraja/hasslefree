@@ -1,16 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule,Routes } from '@angular/router';
-
 import { FuseSharedModule } from '@fuse/shared.module';
-
 import {AuthGuard} from '../../shared/shared';
 
 const routes: Routes = [
     {
-        path: 'hasslefree/lead',
+        path: '',
         loadChildren: './hasslefree/hasslefree.module#HasslefreeModule',
         // canActivate:[AuthGuard]
-   }
+    }
 ];
 
 @NgModule({

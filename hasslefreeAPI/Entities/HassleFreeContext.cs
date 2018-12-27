@@ -241,9 +241,9 @@ namespace hasslefreeAPI.Entities
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.Contact)
-                    .WithOne(p => p.Contacts)
-                    .HasForeignKey<Contacts>(d => d.ContactId)
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.Contacts)
+                    .HasForeignKey(d => d.AccountId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_dbo.Contacts_dbo.Accounts_AccountID");
             });

@@ -8,7 +8,7 @@ namespace hasslefreeAPI.Models
     public class ContactsDto
     {
         public int ContactId { get; set; }
-        public int AccountId { get; set; }
+        public int? AccountId { get; set; }
         public string ContactFirstName { get; set; }
         public string ContactLastName { get; set; }
         public int GenderId { get; set; }
