@@ -69,7 +69,7 @@ export class LoginComponent implements OnInit {
             subscribe(res => {
                 if (res.token != null) {
                     localStorage.setItem('userToken',res.token);
-                    this.router.navigateByUrl('apps/hasslefree/lead');
+                    this.router.navigateByUrl('apps/lead');
                 } else {
                     alert(res.signInErrors[0]);
                 }

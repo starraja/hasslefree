@@ -41,7 +41,7 @@
 
         </div>
 
-        <div class="" fxFlex="0 1 auto" fxLayout="row" fxLayoutAlign="start center">
+        <div class="menu-bar" fxFlex="0 1 auto" fxLayout="row" fxLayoutAlign="start center">
 
             <!-- <button mat-button [matMenuTriggerFor]="userMenu"
                     class="user-button">
@@ -72,9 +72,63 @@
             </mat-menu> -->
 
             <div class="toolbar-separator"></div>
-            <button mat-icon-button class="navbar-toggle-button">
-        <mat-icon class="secondary-text">add</mat-icon>
-    </button> 
+            <button mat-icon-button class="navbar-toggle-button" (click)="openMenu();">
+                <mat-icon class="secondary-text">add</mat-icon>
+            </button> 
+            <div class="open-menu" *ngIf="menus">
+                <div class="entities">
+                    <h5>Entities</h5>
+                    <div class="sub-menus">
+                        <div class="submenu">
+                           <a href="javascript:;">
+                                <img src="/assets/img/lead.png" width="30" height="30">
+                                <span>Lead</span>
+                           </a>
+                        </div>
+                        <div class="submenu">
+                            <a href="javascript:;">
+                                <img src="/assets/img/contact.png" width="30" height="30">
+                                <span>Contact</span>
+                            </a>
+                        </div>
+                        <div class="submenu">
+                            <a href="javascript:;">
+                                 <img src="/assets/img/account.png" width="30" height="30">
+                                 <span>Account</span>
+                            </a>
+                        </div>
+                        <div class="submenu">
+                            <a href="javascript:;">
+                                <img src="/assets/img/deal.png" width="30" height="30">
+                                <span>Deal</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="entities">
+                    <h5>Recent sales activities</h5>
+                    <div class="sub-menus">
+                        <div class="submenu">
+                            <a href="javascript:;">
+                                <img src="/assets/img/task.png" width="30" height="30">
+                                <span>Task</span>
+                            </a>
+                        </div>
+                        <div class="submenu">
+                            <a (click)="openMenu()" routerLink="/apps/appointment">
+                                <img src="/assets/img/appointment.png" width="30" height="30">
+                                <span>Appointment</span>
+                            </a>
+                        </div>
+                        <div class="submenu">
+                           <a href="javascript:;">
+                                <img src="/assets/img/call-log.png" width="30" height="30">
+                                <span>Call Log</span>
+                           </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- <fuse-search-bar (input)="search($event)"></fuse-search-bar> -->
 
             <div class="toolbar-separator"></div>

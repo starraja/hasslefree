@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using hasslefreeAPI.Entities;
 
 namespace hasslefreeAPI.Migrations
 {
     [DbContext(typeof(HassleFreeContext))]
-    partial class HassleFreeContextModelSnapshot : ModelSnapshot
+    [Migration("20181227010345_added_product_Type")]
+    partial class added_product_Type
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -387,8 +389,6 @@ namespace hasslefreeAPI.Migrations
                         .IsUnicode(false);
 
                     b.HasKey("ContactId");
-
-                    b.HasIndex("AccountId");
 
                     b.ToTable("Contacts","dbo");
                 });
@@ -849,9 +849,9 @@ namespace hasslefreeAPI.Migrations
 
             modelBuilder.Entity("hasslefreeAPI.Entities.Contacts", b =>
                 {
-                    b.HasOne("hasslefreeAPI.Entities.Accounts", "Account")
-                        .WithMany("Contacts")
-                        .HasForeignKey("AccountId")
+                    b.HasOne("hasslefreeAPI.Entities.Accounts", "Contact")
+                        .WithOne("Contacts")
+                        .HasForeignKey("hasslefreeAPI.Entities.Contacts", "ContactId")
                         .HasConstraintName("FK_dbo.Contacts_dbo.Accounts_AccountID");
                 });
 

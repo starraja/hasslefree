@@ -28,6 +28,7 @@ export class ToolbarComponent implements OnInit, OnDestroy
     userStatusOptions: any[];
     toolbarIconmenuselected:any;
     loadSelected:any;
+    menus: boolean = false;
     options: any[] = [
         {item:'All',icon:'search'},
         {item:'Lead',icon:'account_circle'},
@@ -188,5 +189,9 @@ export class ToolbarComponent implements OnInit, OnDestroy
     logout(){
         this._userService.logout();
         this._router.navigateByUrl('pages/auth/login');
+    }
+
+    openMenu(){
+        this.menus = !this.menus;
     }
 }

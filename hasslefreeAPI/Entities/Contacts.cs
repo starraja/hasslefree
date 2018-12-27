@@ -6,7 +6,7 @@ namespace hasslefreeAPI.Entities
     public partial class Contacts
     {
         public int ContactId { get; set; }
-        public int AccountId { get; set; }
+        public int? AccountId { get; set; }
         public string ContactFirstName { get; set; }
         public string ContactLastName { get; set; }
         public int GenderId { get; set; }
@@ -34,6 +34,6 @@ namespace hasslefreeAPI.Entities
         public int ModifiedBy { get; set; }
         public DateTime ModifiedDateTime { get; set; }
 
-        public Accounts Contact { get; set; }
+        public Accounts Account { get; set; }
     }
 }

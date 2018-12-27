@@ -9,6 +9,7 @@ namespace hasslefreeAPI.Entities
         {
             Address = new HashSet<Address>();
             Leads = new HashSet<Leads>();
+            Contacts = new HashSet<Contacts>();
         }
 
         public int AccountId { get; set; }
@@ -31,7 +32,7 @@ namespace hasslefreeAPI.Entities
         public int ModifiedBy { get; set; }
         public DateTime ModifiedDateTime { get; set; }
 
-        public Contacts Contacts { get; set; }
+        public ICollection<Contacts> Contacts { get; set; }
         public ICollection<Address> Address { get; set; }
         public ICollection<Leads> Leads { get; set; }
     }

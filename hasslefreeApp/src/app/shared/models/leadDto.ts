@@ -1,4 +1,6 @@
-
+import {ActivitiesDto} from './activitiesDto';
+import {ProductListDto} from './productListDto';
+import {ContactsDto} from './contactsDto';
 export class LeadDto implements ILeadDto {
     leadId?: number | undefined;
     description?: string | undefined;
@@ -41,6 +43,9 @@ export class LeadDto implements ILeadDto {
     createdDateTime?: Date | undefined;
     modifiedBy?: number | undefined;
     modifiedDateTime?: Date | undefined;
+    contact?: ContactsDto | undefined;
+    productList?: ProductListDto[] | undefined;
+    activities?: ActivitiesDto[] | undefined;
 
     constructor(data?: ILeadDto) {
         if (data) {
@@ -94,6 +99,17 @@ export class LeadDto implements ILeadDto {
             this.createdDateTime = data["createdDateTime"] ? new Date(data["createdDateTime"].toString()) : <any>undefined;
             this.modifiedBy = data["modifiedBy"];
             this.modifiedDateTime = data["modifiedDateTime"] ? new Date(data["modifiedDateTime"].toString()) : <any>undefined;
+            this.contact = data["contact"] ? ContactsDto.fromJS(data["contact"]) : <any>undefined;
+            if (data["productList"] && data["productList"].constructor === Array) {
+                this.productList = [];
+                for (let item of data["productList"])
+                    this.productList.push(ProductListDto.fromJS(item));
+            }
+            if (data["activities"] && data["activities"].constructor === Array) {
+                this.activities = [];
+                for (let item of data["activities"])
+                    this.activities.push(ActivitiesDto.fromJS(item));
+            }
         }
     }
 
@@ -147,6 +163,17 @@ export class LeadDto implements ILeadDto {
         data["createdDateTime"] = this.createdDateTime ? this.createdDateTime.toISOString() : <any>undefined;
         data["modifiedBy"] = this.modifiedBy;
         data["modifiedDateTime"] = this.modifiedDateTime ? this.modifiedDateTime.toISOString() : <any>undefined;
+        data["contact"] = this.contact ? this.contact.toJSON() : <any>undefined;
+        if (this.productList && this.productList.constructor === Array) {
+            data["productList"] = [];
+            for (let item of this.productList)
+                data["productList"].push(item.toJSON());
+        }
+        if (this.activities && this.activities.constructor === Array) {
+            data["activities"] = [];
+            for (let item of this.activities)
+                data["activities"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -193,4 +220,7 @@ export interface ILeadDto {
     createdDateTime?: Date | undefined;
     modifiedBy?: number | undefined;
     modifiedDateTime?: Date | undefined;
+    contact?: ContactsDto | undefined;
+    productList?: ProductListDto[] | undefined;
+    activities?: ActivitiesDto[] | undefined;
 }

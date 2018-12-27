@@ -6,6 +6,7 @@ namespace hasslefreeAPI.Entities
     public partial class Products
     {
         public int ProductId { get; set; }
+        public short ProductType { get; set; }
         public string Name { get; set; }
         public decimal? Rate { get; set; }
         public bool? FlagActive { get; set; }
